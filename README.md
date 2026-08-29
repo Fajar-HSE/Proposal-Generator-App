@@ -2,9 +2,9 @@
 
 Aplikasi web sederhana untuk membuat proposal pelatihan profesional dengan bantuan AI. Aplikasi ini sepenuhnya client-side (HTML + CSS + vanilla JS) — tidak butuh server.
 
-## 🚀 Cara Menjalankan
+## 🚀 Cara Mengakses
 
-**Online (publik)**: Buka **[https://a10180b8f0b0c278c.sg.agentos-app.run](https://a10180b8f0b0c278c.sg.agentos-app.run)**
+**Live (GitHub Pages)**: Buka **[https://fajar-hse.github.io/Proposal-Generator-App/](https://fajar-hse.github.io/Proposal-Generator-App/)**
 
 Atau lokal:
 
@@ -15,6 +15,8 @@ python3 -m http.server 8080
 ```
 
 Tambahkan `?demo=1&sample=1` ke URL untuk auto-fill data contoh dan langsung preview.
+
+> ⚠️ **Catatan Firebase**: Tambahkan domain GitHub Pages (`fajar-hse.github.io`) ke Firebase Console → **Authentication → Settings → Authorized domains** agar login Google tidak error.
 
 ## 📄 Hasil Akhir (Siap Jual)
 
