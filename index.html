@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Proposal Generator — Buat Proposal Profesional dengan AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<!-- DOCX export library (dibuat oleh dolanmiu, free for commercial use, MIT license) -->
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+<!-- Firebase Auth SDK (compat version, untuk vanilla JS tanpa bundler) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+  <!-- ========== AUTH SCREEN ========== -->
+  <div id="authScreen" class="screen auth-screen active">
+    <div class="auth-decoration">
+      <div class="deco-blob blob-1"></div>
+      <div class="deco-blob blob-2"></div>
+      <div class="deco-blob blob-3"></div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M9 13h6M9 17h6M9 9h2"/>
+          </svg>
+        </div>
+        <h1>Proposal Generator</h1>
+        <p class="subtitle">Buat proposal profesional dengan bantuan AI — lebih cepat, lebih menarik.</p>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="login" role="tab">Masuk</button>
+        <button class="tab-btn" data-tab="register" role="tab">Daftar</button>
+      </div>
+
+      <form id="authForm" class="form">
+        <div id="registerFields" class="field-group" style="display:none;">
+          <label for="authName">Nama Lengkap</label>
+          <input type="text" id="authName" placeholder="Masukkan nama Anda" class="input" />
+        </div>
+        <div class="field-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" placeholder="nama@perusahaan.com" class="input" required />
+        </div>
+        <div class="field-group">
+          <label for="authPassword">Kata Sandi</label>
+          <input type="password" id="authPassword" placeholder="Masukkan kata sandi" class="input" required />
+          <small class="field-hint" id="passwordHint" style="display:none;">Minimal 6 karakter</small>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Lanjut</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span>atau</span>
+      </div>
+
+      <button type="button" id="googleSignInBtn" class="btn btn-google btn-block">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47c-.28 1.4-1.07 2.59-2.27 3.4v2.81h3.66c2.16-1.99 3.42-4.91 3.42-8.45z"/>
+          <path fill="#34A853" d="M12 24c3.15 0 5.79-1.05 7.72-2.84l-3.66-2.81c-1.02.69-2.33 1.1-4.06 1.1-3.13 0-5.78-2.11-6.72-4.95H1.5v3.09C3.42 21.32 7.4 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.28 14.5c-.24-.69-.38-1.43-.38-2.2s.14-1.51.38-2.2V7.01H1.5C.55 8.66 0 10.42 0 12.3s.55 3.64 1.5 5.29l3.78-3.09z"/>
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.79 1.19 15.13 0 12 0 7.4 0 3.42 2.68 1.5 6.71l3.78 3.09C6.22 6.86 8.87 4.75 12 4.75z"/>
+        </svg>
+        <span>Lanjut dengan Google</span>
+      </button>
+
+      <p class="hint">🔐 Login aman dengan Firebase — password disimpan terenkripsi di server Google.</p>
+    </div>
+
+    <div class="auth-side">
+      <div class="auth-side-content">
+        <div class="auth-side-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+          Didukung AI
+        </div>
+        <h2>Proposal Profesional<br/>dalam Hitungan Menit</h2>
+        <p>Generate latar belakang, deskripsi, tujuan, peserta, dan penutup secara otomatis dengan AI. Hemat waktu, hasil konsisten.</p>
+        <div class="auth-features">
+          <div class="auth-feature">
+            <span class="af-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+            </span>
+            <div><strong>3 Template Profesional</strong><small>Classic, Modern, Minimal</small></div>
+          </div>
+          <div class="auth-feature">
+            <span class="af-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+            </span>
+            <div><strong>Didukung Multi-Provider AI</strong><small>OpenAI, OpenRouter, Groq, Custom</small></div>
+          </div>
+          <div class="auth-feature">
+            <span class="af-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </span>
+            <div><strong>Export PDF Instan</strong><small>Siap kirim ke klien</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MAIN APP ========== -->
+  <div id="appScreen" class="screen app-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Proposal Gen</span>
+          <span class="brand-tag">AI Assistant</span>
+        </div>
+      </div>
+
+      <div class="nav-section-label">Buat Proposal</div>
+      <nav class="nav" id="mainNav">
+        <a href="#" class="nav-item active" data-step="1">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+          </span>
+          <span class="nav-label">Pilih Template</span>
+        </a>
+        <a href="#" class="nav-item" data-step="2">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </span>
+          <span class="nav-label">Info Penting</span>
+        </a>
+        <a href="#" class="nav-item" data-step="3">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          <span class="nav-label">Latar Belakang</span>
+        </a>
+        <a href="#" class="nav-item" data-step="4">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </span>
+          <span class="nav-label">Deskripsi</span>
+        </a>
+        <a href="#" class="nav-item" data-step="5">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </span>
+          <span class="nav-label">Tujuan</span>
+        </a>
+        <a href="#" class="nav-item" data-step="6">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <span class="nav-label">Peserta</span>
+        </a>
+        <a href="#" class="nav-item" data-step="7">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <span class="nav-label">Persyaratan</span>
+        </a>
+        <a href="#" class="nav-item" data-step="8">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <span class="nav-label">Tanggal & Venue</span>
+        </a>
+        <a href="#" class="nav-item" data-step="9">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <span class="nav-label">Biaya</span>
+        </a>
+        <a href="#" class="nav-item" data-step="10">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </span>
+          <span class="nav-label">Fasilitas</span>
+        </a>
+        <a href="#" class="nav-item" data-step="11">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </span>
+          <span class="nav-label">Penutup</span>
+        </a>
+      </nav>
+
+      <div class="nav-section-label">Konfigurasi</div>
+      <nav class="nav">
+        <a href="#" class="nav-item" data-step="settings">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span>
+          <span class="nav-label">Pengaturan AI</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <div class="user-name" id="userName">User</div>
+            <div class="user-email" id="userEmail">user@mail.com</div>
+          </div>
+          <button class="btn-icon" id="logoutBtn" title="Keluar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon mobile-toggle" id="mobileToggle" title="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h2 id="stepTitle">Pilih Template Design</h2>
+            <p class="step-meta" id="stepMeta">Langkah 1 dari 11</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="step-progress" id="stepProgress">
+            <div class="progress-bar"><span id="progressFill"></span></div>
+            <span class="progress-text" id="progressText">1/11</span>
+          </div>
+          <button class="btn btn-ghost" id="prevBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Sebelumnya</span>
+          </button>
+          <button class="btn btn-primary" id="nextBtn">
+            <span>Selanjutnya</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- ========== STEP 1: Template ========== -->
+        <section class="step" data-step="1">
+          <div class="step-hero">
+            <span class="step-pill">Template</span>
+            <h1>Pilih Template Design</h1>
+            <p>Pilih template yang paling sesuai dengan brand Anda. Anda bisa mengganti template kapan saja.</p>
+          </div>
+
+          <div class="templates" id="templates">
+            <label class="template-card selected" data-template="classic">
+              <input type="radio" name="template" value="classic" checked />
+              <div class="template-preview preview-classic">
+                <div class="pv-header"></div>
+                <div class="pv-line w-60"></div>
+                <div class="pv-line w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line w-80"></div>
+                <div class="pv-line w-70"></div>
+                <div class="pv-line w-85"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Classic</h4>
+                  <p>Formal & bersih untuk korporat.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="template-card" data-template="modern">
+              <input type="radio" name="template" value="modern" />
+              <div class="template-preview preview-modern">
+                <div class="pv-header"></div>
+                <div class="pv-line light w-70"></div>
+                <div class="pv-line light w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line light w-85"></div>
+                <div class="pv-line light w-60"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Modern</h4>
+                  <p>Warna bold, layout kekinian.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="template-card" data-template="minimal">
+              <input type="radio" name="template" value="minimal" />
+              <div class="template-preview preview-minimal">
+                <div class="pv-line dark tall w-50"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark thin w-80"></div>
+                <div class="pv-line dark thin w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark thin w-70"></div>
+                <div class="pv-line dark thin w-85"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Minimal</h4>
+                  <p>Tipografi besar, banyak whitespace.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- ========== STEP 2: Info ========== -->
+        <section class="step" data-step="2" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Informasi</span>
+            <h1>Isi Informasi Penting</h1>
+            <p>Detail ini akan dipakai AI untuk generate konten yang relevan dengan kebutuhan Anda.</p>
+          </div>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="field-group">
+                <label for="companyName">Nama Perusahaan <span class="req">*</span></label>
+                <input type="text" id="companyName" class="input" placeholder="PT Contoh Makmur" />
+                <span class="field-hint">Perusahaan yang akan mengikuti pelatihan.</span>
+              </div>
+              <div class="field-group">
+                <label for="organizerName">Nama Penyelenggara <span class="req">*</span></label>
+                <input type="text" id="organizerName" class="input" placeholder="Lembaga Pelatihan ABC" />
+                <span class="field-hint">Penyelenggara / trainer / vendor.</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="proposalTitle">Judul Proposal / Pelatihan <span class="req">*</span></label>
+              <input type="text" id="proposalTitle" class="input" placeholder="Pelatihan Digital Marketing untuk UMKM" />
+              <span class="field-hint">Akan digunakan AI untuk menghasilkan konten yang tepat sasaran.</span>
+            </div>
+            <div class="field-group">
+              <label for="competencyUnit">Unit Kompetensi <span class="opt">(Opsional — Sertifikasi BNSP)</span></label>
+              <input type="text" id="competencyUnit" class="input" placeholder="M.731000.001.01 - Mengelola Kampanye Digital" />
+              <span class="field-hint">Isi jika pelatihan ini terkait sertifikasi BNSP.</span>
+            </div>
+            <div class="field-group">
+              <label for="cta">Call to Action (CTA)</label>
+              <input type="text" id="cta" class="input" placeholder="Daftarkan tim Anda sekarang dan dapatkan diskon khusus." />
+              <span class="field-hint">Ajakan di bagian penutup proposal.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI-generic steps -->
+        <section class="step" data-step="3" style="display:none;"></section>
+        <section class="step" data-step="4" style="display:none;"></section>
+        <section class="step" data-step="5" style="display:none;"></section>
+        <section class="step" data-step="6" style="display:none;"></section>
+        <section class="step" data-step="11" style="display:none;"></section>
+
+        <!-- ========== STEP 7: Persyaratan ========== -->
+        <section class="step" data-step="7" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Persyaratan</span>
+            <h1>Persyaratan Peserta</h1>
+            <p>Tulis sendiri atau biarkan AI membuatkan poin-poin berdasarkan konteks proposal.</p>
+          </div>
+          <div class="form-card">
+            <div class="ai-toolbar">
+              <button class="btn btn-ai ai-suggest" data-target="requirements">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+                <span>Generate dengan AI</span>
+              </button>
+              <span class="toolbar-hint">AI akan menimpa konten di bawah ini.</span>
+            </div>
+            <div class="field-group">
+              <label for="requirements">Persyaratan Peserta</label>
+              <textarea id="requirements" class="textarea" placeholder="Contoh: Pendidikan minimal SMA, memiliki laptop pribadi, bersedia mengikuti seluruh sesi, dsb."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== STEP 8: Tanggal & Venue ========== -->
+        <section class="step" data-step="8" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Jadwal</span>
+            <h1>Tanggal & Venue</h1>
+            <p>Tentukan waktu dan lokasi pelaksanaan pelatihan.</p>
+          </div>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="field-group">
+                <label for="startDate">Tanggal Mulai</label>
+                <input type="date" id="startDate" class="input" />
+              </div>
+              <div class="field-group">
+                <label for="endDate">Tanggal Selesai</label>
+                <input type="date" id="endDate" class="input" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="venue">Venue / Lokasi</label>
+              <input type="text" id="venue" class="input" placeholder="Hotel Grand Hyatt, Jakarta" />
+              <span class="field-hint">Bisa berupa nama hotel, alamat, atau platform online.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== STEP 9: Biaya ========== -->
+        <section class="step" data-step="9" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Investasi</span>
+            <h1>Biaya Pelatihan</h1>
+            <p>Jelaskan struktur biaya dengan jelas agar calon peserta mudah memahami.</p>
+          </div>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="field-group">
+                <label for="pricePerPerson">Biaya per Peserta</label>
+                <input type="text" id="pricePerPerson" class="input" placeholder="Rp 2.500.000" />
+              </div>
+              <div class="field-group">
+                <label for="minParticipants">Minimal Peserta</label>
+                <input type="number" id="minParticipants" class="input" placeholder="10" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="priceNotes">Catatan Biaya</label>
+              <textarea id="priceNotes" class="textarea" placeholder="Termasuk makan siang, sertifikat, dan modul."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== STEP 10: Fasilitas ========== -->
+        <section class="step" data-step="10" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Fasilitas</span>
+            <h1>Fasilitas Peserta</h1>
+            <p>Pilih fasilitas yang akan didapatkan peserta saat mengikuti pelatihan.</p>
+          </div>
+          <div class="facilities" id="facilities">
+            <label class="facility-card">
+              <input type="checkbox" value="Sertifikat kelulusan" checked />
+              <div class="facility-icon">🎓</div>
+              <div class="facility-label">Sertifikat kelulusan</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Modul pelatihan (hardcopy & softcopy)" checked />
+              <div class="facility-icon">📚</div>
+              <div class="facility-label">Modul hardcopy & softcopy</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Makan siang & coffee break" checked />
+              <div class="facility-icon">🍽️</div>
+              <div class="facility-label">Makan siang & coffee break</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Penginapan hotel" />
+              <div class="facility-icon">🏨</div>
+              <div class="facility-label">Penginapan hotel</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Akses e-learning 3 bulan" />
+              <div class="facility-icon">💻</div>
+              <div class="facility-label">Akses e-learning 3 bulan</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Konsultasi gratis pascapelatihan" />
+              <div class="facility-icon">💬</div>
+              <div class="facility-label">Konsultasi pascapelatihan</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+            <label class="facility-card">
+              <input type="checkbox" value="Doorprize & sertifikat BNSP" />
+              <div class="facility-icon">🏆</div>
+              <div class="facility-label">Doorprize & BNSP</div>
+              <span class="facility-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <!-- ========== STEP: Settings ========== -->
+        <section class="step" data-step="settings" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Konfigurasi</span>
+            <h1>Pengaturan AI & Generate Proposal</h1>
+            <p>Atur provider AI, masukkan API key, lalu langsung generate proposal lengkap.</p>
+          </div>
+
+          <div class="form-card">
+            <h3 class="section-title">Provider AI</h3>
+            <div class="form-row">
+              <div class="field-group">
+                <label for="aiProvider">Provider</label>
+                <select id="aiProvider" class="input">
+                  <option value="openai">OpenAI</option>
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="anthropic">Anthropic</option>
+                  <option value="groq">Groq</option>
+                  <option value="custom">Custom (OpenAI-compatible)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="aiModel">Model</label>
+                <input type="text" id="aiModel" class="input" placeholder="gpt-4o-mini" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="aiApiKey">API Key</label>
+              <div class="input-with-action">
+                <input type="password" id="aiApiKey" class="input" placeholder="sk-..." />
+                <button class="btn-icon" type="button" id="toggleKey" title="Tampilkan/sembunyikan">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <span class="field-hint">Disimpan lokal di browser. Jangan gunakan akun production untuk demo bersama.</span>
+            </div>
+            <div class="field-group">
+              <label for="aiBaseUrl">Base URL <span class="opt">(opsional)</span></label>
+              <input type="text" id="aiBaseUrl" class="input" placeholder="https://api.openai.com/v1" />
+              <span class="field-hint">Kosongkan untuk menggunakan default provider.</span>
+            </div>
+            <div class="ai-action-row">
+              <button class="btn btn-ghost" id="testAiBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>Tes Koneksi</span>
+              </button>
+              <button class="btn btn-primary" id="saveAiBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Simpan Pengaturan</span>
+              </button>
+              <span class="ai-status" id="aiStatus"></span>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h3 class="section-title">Generate Proposal</h3>
+            <p class="muted">Pastikan semua langkah sudah terisi. Sistem akan menyusunnya menjadi proposal utuh.</p>
+            <div class="generate-actions">
+              <button class="btn btn-primary btn-large" id="generateBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Generate Proposal</span>
+              </button>
+              <button class="btn btn-secondary btn-large" id="exportPdfBtn" style="display:none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export PDF</span>
+              </button>
+              <button class="btn btn-secondary btn-large" id="exportDocxBtn" style="display:none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                <span>Export DOCX</span>
+              </button>
+            </div>
+            <div id="previewArea" class="preview"></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
