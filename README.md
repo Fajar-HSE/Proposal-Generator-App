@@ -25,14 +25,33 @@ Generate Proposal kini menghasilkan dokumen **multi-halaman** yang siap dikirim 
 | Halaman | Isi |
 |---------|-----|
 | **Cover** | Judul besar, penyelenggara, perusahaan, tanggal, tahun, unit kompetensi (BNSP) |
-| **Table of Contents** | Daftar isi bernomor dengan dot leaders + nomor halaman |
+| **Ringkasan Eksekutif** *(NEW)* | Headline tajam + Masalah vs Solusi + 3 pembeda + Hasil terukur + Investasi + Next step |
+| **Table of Contents** | Daftar isi bernomor dengan dot leaders + Why Us + ROI |
 | **Info Proposal** | Card grid: Untuk, Penyelenggara, Tanggal, Venue, Unit Kompetensi |
-| **Sections (9)** | Latar Belakang → Penutup, masing-masing dengan **nomor besar berwarna gradient** |
-| **Jadwal Pelaksanaan** | Tabel terstruktur per hari |
+| **Sections (12)** | Latar Belakang → Penutup, masing-masing dengan **nomor besar berwarna gradient** |
+| **Mengapa Memilih Kami** *(NEW)* | 5 kartu pembeda dengan ikon |
+| **Dampak & ROI** *(NEW)* | 5 hasil terukur + bukti sosial, format payback 3-6 bulan |
+| **Jadwal Pelaksanaan** | Tabel terstruktur per hari, **jumlah baris otomatis mengikuti rentang tanggal** |
 | **Investasi** | Tabel harga dengan zebra rows |
 | **Fasilitas** | Card grid dengan icon emoji |
-| **Penutup** | Body + CTA box berwarna |
+| **Penutup** | Body + assumptive-close CTA block: deadline pill, masa berlaku pill, 2 kontak, tanda tangan |
 | **Footer** | Otomatis di tiap halaman: judul + nomor halaman |
+
+## 🧠 AI Strategist Pipeline
+
+Generate konten sekarang memakai **2 tahap (chain-of-thought)** agar proposal tidak lagi terdengar generik:
+
+1. **Tahap 1 – Riset Internal** (temperature 0.4): LLM melihat konteks klien (industri, ukuran, pain points, goals, budget, timeline, decision-makers) lalu menghasilkan JSON riset: `headline`, `hooks`, `differentiators`, `outcomes`, `proofPoints`, `objections`, `ctaProposal`, `personas`. Riset tersimpan dan tampil di **💡 panel Riset AI** di bawah tiap textarea — Anda bisa koreksi fakta sebelum menulis.
+2. **Tahap 2 – Penulisan** (temperature 0.7): LLM menulis bagian final memakai insights sebagai ground truth + framework persuasi spesifik per bagian (IIIP untuk Latar Belakang, FAB untuk Deskripsi/Tujuan, Persona untuk Peserta, Checklist untuk Persyaratan, Assumptive Close untuk Penutup) + daftar **frasa terlarang** (10 klise yang dibanned habis).
+
+Tombol tersedia di tiap step AI:
+- **Generate dengan AI** – riset + tulis
+- **🔄 Ulangi** – tulis ulang pakai riset terakhir
+- **🔁 Riset ulang** – riset dari awal
+
+## 📋 Brief Klien (Step baru)
+
+Step opsional sebelum Generate dengan AI. Isi industri klien, ukuran, pain points, target bisnis, range budget, timeline keputusan, dan pengambil keputusan → LLM menghasilkan copy yang spesifik industri Anda. Kosongkan jika tidak tahu — AI otomatis menulis placeholder yang bisa diedit.
 
 ## 🎨 3 Template Design
 
@@ -75,16 +94,17 @@ Aplikasi memakai **Firebase Authentication** untuk login production-grade — pa
 
 1. **Pilih Model Design** — Classic / Modern / Minimal
 2. **Info Penting** — Nama Perusahaan, Penyelenggara, Judul, Unit Kompetensi (opsional), CTA
-3. **Latar Belakang** — ✨ Suggest by AI atau input manual
-4. **Deskripsi** — ✨ Suggest by AI atau input manual
-5. **Tujuan** — ✨ Suggest by AI atau input manual
-6. **Peserta** — ✨ Suggest by AI atau input manual
-7. **Persyaratan** — ✨ Suggest by AI atau input manual
-8. **Tanggal & Venue** — Input manual
-9. **Biaya** — Input manual
-10. **Fasilitas** — Pilih dari checkbox
-11. **Penutup** — ✨ Suggest by AI atau input manual
-12. **Pengaturan AI** — Atur provider, model, API key, base URL, lalu generate proposal + export PDF
+3. **Brief Klien** *(NEW)* — Industri, ukuran, pain points, target bisnis, budget range, timeline keputusan, decision-makers (opsional; semakin lengkap semakin tajam output AI)
+4. **Latar Belakang** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang + panel Riset AI
+5. **Deskripsi** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
+6. **Tujuan** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
+7. **Peserta** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
+8. **Persyaratan** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
+9. **Tanggal & Venue** — Input manual
+10. **Biaya** — Input manual
+11. **Fasilitas** — Pilih dari checkbox
+12. **Penutup** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang (menghasilkan CTA assumptive + deadline + kontak + sign-off)
+13. **Pengaturan AI** — Atur provider, model, API key, base URL, lalu generate proposal + export PDF/DOCX
 
 ## ⚙️ Pengaturan AI
 

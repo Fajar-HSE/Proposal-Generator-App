@@ -230,25 +230,54 @@ let currentStep = 1;
 const stepTitles = {
   1: 'Pilih Template Design',
   2: 'Informasi Penting',
-  3: 'Latar Belakang',
-  4: 'Deskripsi',
-  5: 'Tujuan',
-  6: 'Peserta',
-  7: 'Persyaratan Peserta',
-  8: 'Tanggal & Venue',
-  9: 'Biaya',
-  10: 'Fasilitas',
-  11: 'Penutup',
+  3: 'Brief Klien (Konteks Bisnis)',
+  4: 'Latar Belakang',
+  5: 'Deskripsi',
+  6: 'Tujuan',
+  7: 'Peserta',
+  8: 'Persyaratan Peserta',
+  9: 'Tanggal & Venue',
+  10: 'Biaya',
+  11: 'Fasilitas',
+  12: 'Penutup',
   settings: 'Pengaturan AI & Generate'
 };
 
+// AI-generated steps: now include clientBrief-related context (read clientBrief fields into context automatically).
+// Penutup also pulls in CTA & decision-maker info.
 const aiSteps = {
-  3: { id: 'background', label: 'Latar Belakang', promptKey: 'background' },
-  4: { id: 'description', label: 'Deskripsi', promptKey: 'description' },
-  5: { id: 'objectives', label: 'Tujuan', promptKey: 'objectives' },
-  6: { id: 'audience', label: 'Peserta', promptKey: 'audience' },
-  11: { id: 'closing', label: 'Penutup', promptKey: 'closing' }
+  4: { id: 'background', label: 'Latar Belakang', promptKey: 'background', framework: 'IIIP' },
+  5: { id: 'description', label: 'Deskripsi', promptKey: 'description', framework: 'FAB' },
+  6: { id: 'objectives', label: 'Tujuan', promptKey: 'objectives', framework: 'FAB' },
+  7: { id: 'audience', label: 'Peserta', promptKey: 'audience', framework: 'PERSONA' },
+  8: { id: 'requirements', label: 'Persyaratan Peserta', promptKey: 'requirements', framework: 'CHECKLIST' },
+  12: { id: 'closing', label: 'Penutup', promptKey: 'closing', framework: 'ASSUMPTIVE_CLOSE' }
 };
+
+// Persuasion frameworks the prompts reference per section type.
+const FRAMEWORKS = {
+  IIIP: 'Gunakan struktur **Issue → Impact → Implication → Payoff**: (1) Issue = masalah aktual yang klien hadapi hari ini; (2) Impact = konsekuensi kuantitatif dari masalah tersebut; (3) Implication = risiko jika dibiarkan; (4) Payoff = bagaimana pelatihan ini mengubah status quo.',
+  FAB: 'Gunakan kerangka **Feature → Advantage → Benefit** untuk setiap poin: Fitur konkret materi/metode, Keunggulan dibanding alternatif, Manfaat terukur yang dirasakan klien.',
+  PERSONA: 'Gunakan kerangka **Persona → Pains → Gains → Channels**: deskripsikan profil ideal peserta, apa yang mereka keluhkan hari ini, apa yang mereka ingin capai, dan bagaimana pelatihan ini menjangkau mereka.',
+  CHECKLIST: 'Setiap poin harus **dapat diverifikasi** oleh panitia (laptop, sertifikat, presensi, pre-test, dsb). Hindari poin generik seperti "bersedia belajar".',
+  ASSUMPTIVE_CLOSE: 'Gunakan **assumptive close**: asumsikan klien akan lanjut, sebutkan **deadline konfirmasi**, **masa berlaku penawaran**, **satu aksi spesifik** yang klien lakukan berikutnya, plus **dua kontak** (penjualan & admin). Hindari "silakan hubungi kami jika berminat".'
+};
+
+// Banned phrases that kill persuasion (the AI replaces with specifics).
+const BANNED_PHRASES = [
+  'dalam era digital',
+  'tidak dapat dipungkiri',
+  'semoga bermanfaat',
+  'semoga proposal ini',
+  'kami berharap',
+  'silakan menghubungi kami',
+  'tidak ada salahnya',
+  'saat ini kita berada di',
+  'di era yang serba digital',
+  'revolusi industri 4.0'
+];
+
+function totalSteps() { return 12; }
 
 function updateProgress(step) {
   if (step === 'settings') {
@@ -258,10 +287,11 @@ function updateProgress(step) {
     return;
   }
   const s = Number(step);
-  const pct = (s / 11) * 100;
+  const total = totalSteps();
+  const pct = (s / total) * 100;
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = `${s}/11`;
-  document.getElementById('stepMeta').textContent = `Langkah ${s} dari 11`;
+  document.getElementById('progressText').textContent = `${s}/${total}`;
+  document.getElementById('stepMeta').textContent = `Langkah ${s} dari ${total}`;
 }
 
 function showStep(step) {
@@ -303,7 +333,7 @@ document.getElementById('nextBtn').addEventListener('click', () => {
       toast('Lengkapi field wajib di langkah ini', 'error'); return;
     }
   }
-  if (s < 11) showStep(s + 1);
+  if (s < totalSteps()) showStep(s + 1);
   else showStep('settings');
 });
 
@@ -336,16 +366,34 @@ function buildAiStep(step) {
     <div class="step-hero">
       <span class="step-pill">${cfg.label}</span>
       <h1>${cfg.label}</h1>
-      <p>Gunakan AI untuk generate konten profesional, atau tulis manual dengan gaya Anda sendiri.</p>
+      <p>AI menggunakan <strong>2 tahap</strong>: riset dulu, baru tulis. Hasil riset ditampilkan di panel di bawah — Anda bisa koreksi fakta sebelum AI menulis.</p>
+      <p class="framework-hint">Framework: <em>${cfg.framework}</em></p>
     </div>
     <div class="form-card">
       <div class="ai-toolbar">
-        <button class="btn btn-ai ai-suggest" data-target="${cfg.id}">
+        <button class="btn btn-ai ai-suggest" data-target="${cfg.id}" data-action="chain">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
           <span>Generate dengan AI</span>
         </button>
-        <span class="toolbar-hint">AI akan menimpa konten di bawah ini.</span>
+        <button class="btn btn-ghost btn-regen" data-target="${cfg.id}" data-action="rewrite" title="Tulis ulang pakai riset terakhir">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>Ulangi</span>
+        </button>
+        <button class="btn btn-ghost btn-research" data-target="${cfg.id}" data-action="research" title="Riset ulang dari awal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Riset ulang</span>
+        </button>
       </div>
+
+      <details class="insights-panel" data-target="${cfg.id}">
+        <summary>
+          <span class="insights-summary-icon">💡</span>
+          <span class="insights-summary-label">Riset AI (klik untuk lihat)</span>
+          <span class="insights-summary-empty">— belum ada —</span>
+        </summary>
+        <div class="insights-body"><em>Hasil riset akan muncul di sini setelah klik "Generate dengan AI".</em></div>
+      </details>
+
       <div class="field-group">
         <label for="${cfg.id}">${cfg.label}</label>
         <textarea id="${cfg.id}" class="textarea tall" placeholder="Klik 'Generate dengan AI' atau tulis manual..."></textarea>
@@ -354,19 +402,55 @@ function buildAiStep(step) {
   `;
   stepEl.dataset.built = '1';
   document.getElementById(cfg.id).addEventListener('input', saveProposalState);
-  stepEl.querySelector('.ai-suggest').addEventListener('click', () => generateAi(cfg));
+  const chainBtn  = stepEl.querySelector('[data-action="chain"]');
+  const rewriteBtn = stepEl.querySelector('[data-action="rewrite"]');
+  const researchBtn = stepEl.querySelector('[data-action="research"]');
+  chainBtn.addEventListener('click', () => generateAi(cfg, { mode: 'chain' }));
+  rewriteBtn.addEventListener('click', () => generateAi(cfg, { mode: 'rewrite' }));
+  researchBtn.addEventListener('click', () => generateAi(cfg, { mode: 'research' }));
   const state = Store.get('pg_proposal', {});
   if (state[cfg.id]) document.getElementById(cfg.id).value = state[cfg.id];
+
+  // Restore persisted insights panel if any
+  const insightsForStep = Store.get(`pg_insights_${cfg.id}`, null);
+  if (insightsForStep) renderInsightsPanel(cfg.id, insightsForStep);
 }
 
-// Step 7
+// Persist + render the AI insights panel for a section
+function renderInsightsPanel(targetId, payload) {
+  const details = document.querySelector(`details.insights-panel[data-target="${targetId}"]`);
+  if (!details) return;
+  if (!payload || (!payload.headline && !Array.isArray(payload.differentiators))) {
+    details.querySelector('.insights-body').innerHTML = '<em>(kosong)</em>';
+    details.querySelector('.insights-summary-empty').textContent = '— belum ada —';
+    return;
+  }
+  const blocks = [];
+  if (payload.headline)            blocks.push(`<div class="ins-block"><div class="ins-label">Headline</div><div class="ins-val">${escapeHtml(payload.headline)}</div></div>`);
+  if (Array.isArray(payload.hooks) && payload.hooks.length) blocks.push(`<div class="ins-block"><div class="ins-label">Opening Hooks</div><ul>${payload.hooks.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  if (Array.isArray(payload.differentiators) && payload.differentiators.length) blocks.push(`<div class="ins-block"><div class="ins-label">Pembeda</div><ul>${payload.differentiators.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  if (Array.isArray(payload.outcomes) && payload.outcomes.length) blocks.push(`<div class="ins-block"><div class="ins-label">Outcomes (terukur)</div><ul>${payload.outcomes.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  if (Array.isArray(payload.proofPoints) && payload.proofPoints.length) blocks.push(`<div class="ins-block"><div class="ins-label">Bukti Sosial</div><ul>${payload.proofPoints.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  if (Array.isArray(payload.objections) && payload.objections.length) blocks.push(`<div class="ins-block"><div class="ins-label">Antisipasi Keraguan</div><ul>${payload.objections.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  if (payload.ctaProposal)          blocks.push(`<div class="ins-block"><div class="ins-label">CTA yang Disarankan</div><div class="ins-val">${escapeHtml(payload.ctaProposal)}</div></div>`);
+  if (Array.isArray(payload.personas) && payload.personas.length) blocks.push(`<div class="ins-block"><div class="ins-label">Persona Peserta</div><ul>${payload.personas.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul></div>`);
+  details.querySelector('.insights-body').innerHTML = blocks.join('');
+  details.querySelector('.insights-summary-empty').textContent = `— ${Object.keys(payload).filter(k => Array.isArray(payload[k]) ? payload[k].length : !!payload[k]).length} poin riset —`;
+}
+
+// Step 8 (Persyaratan) — also re-triggered by the in-HTML button since it's not built dynamically
 const reqEl = document.getElementById('requirements');
 if (reqEl) reqEl.addEventListener('input', saveProposalState);
-document.querySelector('[data-target="requirements"]')?.addEventListener('click', () =>
-  generateAi({ id: 'requirements', label: 'Persyaratan Peserta', promptKey: 'requirements' })
+document.querySelector('[data-target="requirements"][data-action="chain"]')?.addEventListener('click', () =>
+  generateAi({ id: 'requirements', label: 'Persyaratan Peserta', promptKey: 'requirements', framework: 'CHECKLIST' }, { mode: 'chain' })
 );
 
 // ---------- Save / Load ----------
+const CLIENT_BRIEF_FIELDS = [
+  'clientIndustry', 'companySize', 'topPainPoints', 'businessGoals',
+  'budgetRange', 'decisionTimeline', 'decisionMakers'
+];
+
 function saveProposalState() {
   const state = Store.get('pg_proposal', {});
   const selected = document.querySelector('.template-card.selected');
@@ -374,6 +458,10 @@ function saveProposalState() {
   ['companyName','organizerName','proposalTitle','competencyUnit','cta','startDate','endDate','venue','pricePerPerson','minParticipants','priceNotes'].forEach(id => {
     const el = document.getElementById(id);
     state[id] = el ? el.value : '';
+  });
+  CLIENT_BRIEF_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    state[id] = el ? el.value : (state[id] || '');
   });
   ['background','description','objectives','audience','closing'].forEach(id => {
     const el = document.getElementById(id);
@@ -397,6 +485,10 @@ function loadProposalState() {
     const el = document.getElementById(id);
     if (el && s[id]) el.value = s[id];
   });
+  CLIENT_BRIEF_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && s[id]) el.value = s[id];
+  });
   ['background','description','objectives','audience','closing'].forEach(id => {
     const el = document.getElementById(id);
     if (el && s[id]) el.value = s[id];
@@ -406,6 +498,26 @@ function loadProposalState() {
     const el = document.getElementById('requirements');
     if (el) el.value = s.requirements;
   }
+}
+
+// Auto-save Client Brief inputs
+['clientIndustry','companySize','topPainPoints','businessGoals','budgetRange','decisionTimeline','decisionMakers'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', saveProposalState);
+  if (el) el.addEventListener('change', saveProposalState);
+});
+
+// ---------- Validity date helpers (used by Penutup / CTA) ----------
+function offerValidityDate(days = 14) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function fmtDateIndo(d) {
+  if (!d) return '';
+  const dt = (d instanceof Date) ? d : new Date(d);
+  if (isNaN(dt)) return '';
+  return `${dt.getDate()} ${MONTH_ID[dt.getMonth()]} ${dt.getFullYear()}`;
 }
 
 // ---------- AI Settings ----------
@@ -455,22 +567,105 @@ document.getElementById('testAiBtn').addEventListener('click', async () => {
 });
 
 // ---------- AI Caller ----------
-function buildPromptFor(cfg) {
+function buildClientContext() {
   const s = Store.get('pg_proposal', {});
-  const ctx = `Perusahaan: ${s.companyName || '-'}\nPenyelenggara: ${s.organizerName || '-'}\nJudul: ${s.proposalTitle || '-'}\nUnit Kompetensi: ${s.competencyUnit || '-'}\nVenue: ${s.venue || '-'}\nTanggal: ${s.startDate || '-'} s/d ${s.endDate || '-'}\nBiaya: ${s.pricePerPerson || '-'}`;
-  const role = 'Anda adalah penulis proposal profesional berbahasa Indonesia.';
-  const instructs = {
-    background: `${role} Tulis "Latar Belakang" (3 paragraf, formal) untuk proposal pelatihan berikut. Jelaskan mengapa pelatihan ini penting.\n\nKonteks:\n${ctx}`,
-    description: `${role} Tulis "Deskripsi" pelatihan (3-4 paragraf, formal) yang menjelaskan materi dan pendekatan pelatihan.\n\nKonteks:\n${ctx}`,
-    objectives: `${role} Tulis "Tujuan" pelatihan dalam 4-6 poin singkat terukur. Awali tiap poin dengan "• ".\n\nKonteks:\n${ctx}`,
-    audience: `${role} Tulis "Peserta" target dalam 2 paragraf (profil dan pihak yang diuntungkan).\n\nKonteks:\n${ctx}`,
-    closing: `${role} Tulis "Penutup" (2 paragraf persuasif) yang diakhiri ajakan sesuai CTA: ${s.cta || 'Daftarkan segera.'}\n\nKonteks:\n${ctx}`,
-    requirements: `${role} Tulis "Persyaratan Peserta" dalam 4-6 poin. Awali tiap poin dengan "• ".\n\nKonteks:\n${ctx}`
-  };
-  return instructs[cfg.promptKey] || instructs.background;
+  const lines = [
+    `Perusahaan klien: ${s.companyName || '-'}`,
+    `Penyelenggara: ${s.organizerName || '-'}`,
+    `Judul pelatihan: ${s.proposalTitle || '-'}`,
+    `Unit kompetensi: ${s.competencyUnit || '-'}`,
+    `Venue: ${s.venue || '-'}`,
+    `Tanggal: ${s.startDate || '-'} s/d ${s.endDate || '-'}`,
+    `Biaya per peserta: ${s.pricePerPerson || '-'}`,
+    `Minimal peserta: ${s.minParticipants || '-'}`,
+    s.clientIndustry ? `Industri klien: ${s.clientIndustry}` : null,
+    s.companySize ? `Ukuran klien: ${s.companySize}` : null,
+    s.topPainPoints ? `Pain points utama:\n${s.topPainPoints}` : null,
+    s.businessGoals ? `Target bisnis:\n${s.businessGoals}` : null,
+    s.budgetRange ? `Perkiraan budget: ${s.budgetRange}` : null,
+    s.decisionTimeline ? `Timeline keputusan: ${s.decisionTimeline}` : null,
+    s.decisionMakers ? `Pengambil keputusan: ${s.decisionMakers}` : null
+  ].filter(Boolean);
+  return lines.join('\n');
 }
 
-async function callAi(cfg, messages) {
+// Common system prompt. Includes persona, voice, banned phrases, format rules.
+function buildSystemPrompt(cfg) {
+  const framework = FRAMEWORKS[cfg.framework] || 'Gunakan prinsip copywriting profesional.';
+  const banned = BANNED_PHRASES.map((p, i) => `${i+1}. "${p}"`).join('\n');
+  return `Anda adalah konsultan senior penjualan Indonesia yang menulis proposal B2B bernilai tinggi (>Rp 50 juta). Gaya Anda: tajam, spesifik, percaya diri, FOKUS pada klien — bukan promosi vendor.
+
+KERANGKA PERSUASI untuk bagian ini:
+${framework}
+
+PEDOMAN KERAS (WAJIB DIIKUTI):
+- Tulis dalam bahasa Indonesia formal-korporat modern.
+- Setiap klaim harus bisa diverifikasi atau diganti placeholder yang jelas (mis. "≥30%" bukan "meningkatkan penjualan").
+- Lebih suka angka, rentang waktu, dan contoh industri spesifik daripada klaim generik.
+- Hindari frasa klise dan basa-basi yang kosong. **JANGAN PERNAH** gunakan frasa berikut:
+${banned}
+- Output hanya BODY — jangan heading, jangan markdown code block, jangan instruksi pembuka/penutup.
+- Panjangnya sesuai permintaan pada prompt user. Jika tidak ada, default 3 paragraf (≈ 120-180 kata) untuk naratif, atau 4-6 poin bullet untuk daftar.
+- Jika informasi klien kosong, JANGAN mengarang angka — gunakan placeholder seperti "[X]%" atau "[industri klien]" yang mudah diedit user nanti.`;
+}
+
+// Stage-1 prompt: produce a structured insights JSON the writing stage will consume.
+function buildInsightsPrompt(cfg) {
+  const ctx = buildClientContext();
+  return `Riset internal dulu sebelum menulis bagian "${cfg.label}".
+
+Konteks:\n${ctx}
+
+TUGAS:
+Berdasarkan konteks di atas, hasilkan SATU objek JSON (TANPA teks di luar JSON) berisi:
+- "headline": 1 kalimat sudut tajam yang membingkai masalah klien.
+- "hooks": array 2 kalimat pembuka yang bisa dipakai di paragraf pertama.
+- "differentiators": array 3-4 pembeda dibanding vendor lain.
+- "outcomes": array 3 hasil terukur yang bisa diharapkan klien (boleh pakai placeholder seperti "[X]%" / "[N] hari").
+- "proofPoints": array 1-2 bukti sosial (industri, klien, metric, atau asosiasi). Boleh placeholder.
+- "objections": array 1-2 keraguan paling umum + counter 1 kalimat (untuk referensi tone, tidak harus masuk output).
+- Untuk closing: "ctaProposal" = 1 kalimat CTA + "deadline" = tanggal konkret (mis. "15 November 2025") + "validity" = "14 hari sejak tanggal surat".
+- Untuk peserta/audience: "personas": array 2-3 deskripsi persona singkat.
+
+Pastikan setiap poin menggunakan konteks klien (industri, ukuran, pain points) bila tersedia. JSON harus valid dan bisa di-parse.`;
+}
+
+// Stage-2 prompt: write the actual section using the insights as ground truth.
+function buildSectionPrompt(cfg, insightsJsonStr) {
+  const lengthGuide = {
+    background: '3 paragraf (≈ 150-200 kata).',
+    description: '3-4 paragraf (≈ 180-240 kata) + sebutkan metode/metodologi.',
+    objectives: '4-6 poin bullet, tiap poin 1 kalimat aktif yang ACTIONABLE.',
+    audience: '2 paragraf (≈ 120-160 kata), persona + manifestasi kebutuhan mereka.',
+    requirements: '4-6 poin bullet, tiap poin verifiable.',
+    closing: '2 paragraf persuasif + 1 paragraf CTA assumptive (deadline + 2 kontak + tanda tangan).'
+  };
+  const base = `Riset internal (jangan tampilkan di output):\n${insightsJsonStr || '(riset tidak tersedia — gunakan inferensi dari konteks klien)'}\n\nTulis bagian "${cfg.label}" proposal.
+
+Panjang target: ${lengthGuide[cfg.promptKey] || '2-3 paragraf.'}
+Nada: percaya diri, spesifik, berorientasi klien.`;
+  if (cfg.promptKey === 'closing') {
+    return `${base}
+
+PASTIKAN paragraf terakhir berisi:
+1. Asumsi positif kerjasama ("Kami sudah准备...)
+2. **Deadline konfirmasi**: sebutkan tanggal absolut (mis. "15 November 2025")
+3. **Masa berlaku penawaran**: "14 hari sejak tanggal proposal"
+4. **Dua kontak** (penjualan + admin) dengan nama & nomor WA/email
+5. Tanda tangan digital di atas nama jelas`;
+  }
+  return base;
+}
+
+// Robust JSON extractor for LLM responses that may include prose around the JSON.
+function extractJson(text) {
+  if (!text) return null;
+  const m = String(text).match(/\{[\s\S]*\}/);
+  if (!m) return null;
+  try { return JSON.parse(m[0]); } catch { return null; }
+}
+
+async function callAi(cfg, messages, opts = {}) {
   if (!cfg.apiKey) throw new Error('API Key belum diisi');
   const defaults = {
     openai: 'https://api.openai.com/v1',
@@ -484,7 +679,12 @@ async function callAi(cfg, messages) {
   const r = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` },
-    body: JSON.stringify({ model: cfg.model, messages, temperature: 0.7 })
+    body: JSON.stringify({
+      model: cfg.model,
+      messages,
+      temperature: opts.temperature ?? 0.7,
+      ...(opts.response_format ? { response_format: opts.response_format } : {})
+    })
   });
   if (!r.ok) {
     const t = await r.text();
@@ -494,7 +694,8 @@ async function callAi(cfg, messages) {
   return data?.choices?.[0]?.message?.content || '';
 }
 
-async function generateAi(cfg) {
+// 2-stage AI pipeline: research → write (or just rewrite using stored insights)
+async function generateAi(cfg, options = {}) {
   const state = Store.get('pg_proposal', {});
   if (!state.companyName || !state.proposalTitle) {
     toast('Lengkapi Info Penting (Step 2) dulu', 'error'); return;
@@ -504,23 +705,53 @@ async function generateAi(cfg) {
     toast('Atur API Key dulu di Pengaturan AI', 'error');
     showStep('settings'); return;
   }
-  const btn = document.querySelector(`[data-target="${cfg.id}"]`);
-  const originalHTML = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span>⏳ Generating...</span>';
+
+  const mode = options.mode || 'chain'; // 'chain' | 'rewrite' | 'research'
+  const chainBtn  = document.querySelector(`[data-target="${cfg.id}"][data-action="chain"]`);
+  const rewriteBtn = document.querySelector(`[data-target="${cfg.id}"][data-action="rewrite"]`);
+  const researchBtn = document.querySelector(`[data-target="${cfg.id}"][data-action="research"]`);
+  const buttons = [chainBtn, rewriteBtn, researchBtn].filter(Boolean);
+  const originalHtmlByBtn = new Map(buttons.map(b => [b, b.innerHTML]));
+  const setBusy = (btn, label) => { if (btn) { btn.disabled = true; btn.innerHTML = `<span>${label}</span>`; } };
+  buttons.forEach(b => setBusy(b, '⏳ ...'));
+
   try {
-    const text = await callAi(ai, [
-      { role: 'system', content: buildPromptFor(cfg) },
-      { role: 'user', content: 'Hasilkan sekarang.' }
+    let insights = Store.get(`pg_insights_${cfg.id}`, null);
+
+    if (mode !== 'rewrite' && mode !== 'chain-no-research') {
+      // Stage 1: research
+      setBusy(researchBtn || chainBtn, '⏳ Riset...');
+      const insightText = await callAi(ai, [
+        { role: 'system', content: 'Anda adalah analis riset senior. Output HANYA JSON valid. Tidak ada teks lain.' },
+        { role: 'user', content: buildInsightsPrompt(cfg) }
+      ], { temperature: 0.4, response_format: ai.provider === 'openai' ? { type: 'json_object' } : undefined });
+      const parsed = extractJson(insightText);
+      if (parsed) {
+        insights = parsed;
+        Store.set(`pg_insights_${cfg.id}`, insights);
+        renderInsightsPanel(cfg.id, insights);
+      }
+    }
+
+    if (mode === 'research') {
+      toast('Riset diperbarui', 'success');
+      return;
+    }
+
+    // Stage 2: write
+    setBusy(chainBtn || rewriteBtn, '⏳ Menulis...');
+    const insightsJson = insights ? JSON.stringify(insights) : '';
+    const sectionText = await callAi(ai, [
+      { role: 'system', content: buildSystemPrompt(cfg) },
+      { role: 'user', content: buildSectionPrompt(cfg, insightsJson) }
     ]);
     const ta = document.getElementById(cfg.id);
-    if (ta) { ta.value = text; saveProposalState(); }
-    toast(`${cfg.label} dibuat`, 'success');
+    if (ta) { ta.value = sectionText.trim(); saveProposalState(); }
+    toast(`${cfg.label} diperbarui`, 'success');
   } catch (e) {
     toast('Error: ' + e.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalHTML;
+    buttons.forEach(b => { b.disabled = false; if (originalHtmlByBtn.has(b)) b.innerHTML = originalHtmlByBtn.get(b); });
   }
 }
 
@@ -541,6 +772,14 @@ function getProposalData() {
     minParticipants: s.minParticipants || '',
     priceNotes: s.priceNotes || '',
     facilities: Array.isArray(s.facilities) ? s.facilities : [],
+    // Client brief fields (used by Exec Summary + Closing CTA)
+    clientIndustry: s.clientIndustry || '',
+    companySize: s.companySize || '',
+    topPainPoints: s.topPainPoints || '',
+    businessGoals: s.businessGoals || '',
+    budgetRange: s.budgetRange || '',
+    decisionTimeline: s.decisionTimeline || '',
+    decisionMakers: s.decisionMakers || '',
     body: {
       background: s.background || '',
       description: s.description || '',
@@ -585,18 +824,6 @@ function renderProposalHTML(data, opts = {}) {
   const dateRange = fmtDateRange(data.startDate, data.endDate);
   const facilityIcon = (i) => ['🎓','📚','🍽️','🏨','💻','💬','🏆','📜','✈️','🎯'][i % 10];
 
-  const toc = [
-    ['01','Latar Belakang'],
-    ['02','Deskripsi Pelatihan'],
-    ['03','Tujuan'],
-    ['04','Peserta'],
-    ['05','Persyaratan Peserta'],
-    ['06','Jadwal Pelaksanaan'],
-    ['07','Investasi'],
-    ['08','Fasilitas'],
-    ['09','Penutup']
-  ];
-
   const sectionsHTML = [
     {num:1, title:'Latar Belakang', body: nl2br(data.body.background || '—')},
     {num:2, title:'Deskripsi Pelatihan', body: nl2br(data.body.description || '—')},
@@ -618,20 +845,19 @@ function renderProposalHTML(data, opts = {}) {
     </section>
   `).join('');
 
-  // Schedule table (6)
+  // Schedule table (6) — dynamic rows based on start/end dates
+  const scheduleRows = buildScheduleDays(data.startDate, data.endDate);
   const scheduleSection = `
     <section class="section-block">
       <div class="section-num">06</div>
       <div class="section-content">
         <h2 class="section-title">Jadwal Pelaksanaan</h2>
-        ${dateRange ? `<p class="section-body"><strong>Tanggal:</strong> ${escapeHtml(dateRange)}</p>` : ''}
+        ${dateRange ? `<p class="section-body"><strong>Tanggal:</strong> ${escapeHtml(dateRange)} (${scheduleRows.length} hari)</p>` : ''}
         ${data.venue ? `<p class="section-body"><strong>Lokasi:</strong> ${escapeHtml(data.venue)}</p>` : ''}
         <table class="proposal-table schedule-table">
           <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
           <tbody>
-            <tr><td>Hari 1</td><td>Pembukaan, pengenalan materi, sesi inti 1 & 2</td></tr>
-            <tr><td>Hari 2</td><td>Sesi inti 3, latihan terapan, diskusi kelompok</td></tr>
-            <tr><td>Hari 3</td><td>Studi kasus, presentasi, uji kompetensi, penutupan</td></tr>
+            ${scheduleRows.map(label => `<tr><td><strong>${escapeHtml(label.split(' — ')[0])}</strong></td><td>${escapeHtml(label.split(' — ')[1] || 'Sesi inti & latihan terapan')}</td></tr>`).join('')}
           </tbody>
         </table>
       </div>
@@ -676,17 +902,45 @@ function renderProposalHTML(data, opts = {}) {
     </section>
   `;
 
-  // Closing (9)
+  // Closing (9) — upgraded with assumptive close, deadline, validity, dua kontak, tanda tangan
+  const validityDate = offerValidityDate(14);
+  const deadlineStr = fmtDateIndo(validityDate);
+  const ttdName = data.organizer || 'Tim Account Executive';
+  const ctaText = data.cta || 'Mari wujudkan bersama.';
+  const contactsHTML = `
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">${escapeHtml(ttdName)}</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  `;
   const closingSection = `
-    <section class="section-block">
+    <section class="section-block closing-block">
       <div class="section-num">09</div>
       <div class="section-content">
         <h2 class="section-title">Penutup</h2>
         <p class="section-body">${nl2br(data.body.closing || '—')}</p>
-        ${data.cta ? `<div class="cta-box"><strong>${escapeHtml(data.cta)}</strong></div>` : ''}
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">${escapeHtml(ctaText)}</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">${deadlineStr}</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">${deadlineStr}</span></div>
+          </div>
+          ${contactsHTML}
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>${escapeHtml(ttdName)}</strong></div>
+            <div class="sig-role">Account Executive • ${escapeHtml(data.organizer || '')}</div>
+          </div>
+        </div>
       </div>
     </section>
   `;
+
+  // ---------- New persuasion sections (used inside the proposal) ----------
+  const execSummaryHTML = buildExecSummaryHTML(data, { pdf, dateRange });
+  const whyUsSectionHTML = buildWhyUsSectionHTML(data);
+  const roiSectionHTML = buildRoiSectionHTML();
 
   return `
     <article class="proposal tpl-${tpl}">
@@ -711,6 +965,9 @@ function renderProposalHTML(data, opts = {}) {
         </div>
       </section>
 
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      ${execSummaryHTML}
+
       <!-- TABLE OF CONTENTS PAGE -->
       <section class="proposal-page toc-page${pdf ? ' page-pdf' : ''}">
         <div class="page-header">
@@ -718,14 +975,30 @@ function renderProposalHTML(data, opts = {}) {
           <h2 class="page-title">Table of Contents</h2>
         </div>
         <ul class="toc-list">
-          ${toc.map(([n, t]) => `
-            <li class="toc-item">
-              <span class="toc-num">${n}</span>
-              <span class="toc-label">${escapeHtml(t)}</span>
-              <span class="toc-dots"></span>
-              <span class="toc-page">${pdf ? '' : ''}</span>
-            </li>
-          `).join('')}
+          ${(() => {
+            // Expanded TOC includes Exec Summary + Why Us + ROI
+            return [
+              ['ES','Ringkasan Eksekutif'],
+              ['01','Latar Belakang'],
+              ['02','Deskripsi Pelatihan'],
+              ['03','Tujuan'],
+              ['04','Peserta'],
+              ['05','Persyaratan Peserta'],
+              ['05A','Mengapa Memilih Kami'],
+              ['05B','Dampak & ROI'],
+              ['06','Jadwal Pelaksanaan'],
+              ['07','Investasi'],
+              ['08','Fasilitas'],
+              ['09','Penutup']
+            ].map(([n, t]) => `
+              <li class="toc-item">
+                <span class="toc-num">${n}</span>
+                <span class="toc-label">${escapeHtml(t)}</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">${pdf ? '' : ''}</span>
+              </li>
+            `).join('');
+          })()}
         </ul>
       </section>
 
@@ -748,6 +1021,8 @@ function renderProposalHTML(data, opts = {}) {
       <section class="proposal-page sections-page${pdf ? ' page-pdf' : ''}">
         <div class="sections-wrap">
           ${sectionsHTML}
+          ${whyUsSectionHTML}
+          ${roiSectionHTML}
           ${scheduleSection}
           ${pricingSection}
           ${facilitiesSection}
@@ -780,6 +1055,135 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
 }
 function nl2br(str) { return escapeHtml(str).replace(/\n/g, '<br/>'); }
+
+// Build Executive Summary bullets from the body + client brief + insights.
+function buildExecSummaryHTML(data, opts = {}) {
+  const pdf = !!opts.pdf;
+  const dateRange = opts.dateRange || '';
+  const insights = Store.get('pg_insights_background', null);
+  const headline = insights?.headline || data.title;
+  const diffs = Array.isArray(insights?.differentiators) && insights.differentiators.length
+    ? insights.differentiators.slice(0, 3)
+    : ['Tenaga pengajar tersertifikasi', 'Metodologi berbasis studi kasus industri Anda', 'Garansi pascapelatihan & konsultasi'];
+  const outcomes = Array.isArray(insights?.outcomes) && insights.outcomes.length
+    ? insights.outcomes.slice(0, 3)
+    : ['Peserta memahami kerangka kerja', 'Peserta mampu mengaplikasikan di pekerjaan nyata', 'Perusahaan memiliki blueprint implementasi'];
+  const investment = data.pricePerPerson || '—';
+  const decisionMakers = data.decisionMakers || 'tim pengambil keputusan Anda';
+  return `
+    <section class="proposal-page exec-summary-page${pdf ? ' page-pdf' : ''}">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">${escapeHtml(headline)}</div>
+      <p class="exec-meta">Disusun untuk <strong>${escapeHtml(data.company)}</strong> • oleh <strong>${escapeHtml(data.organizer)}</strong>${dateRange ? ' • ' + escapeHtml(dateRange) : ''}</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">${escapeHtml((Store.get('pg_proposal', {}).topPainPoints || 'Kesenjangan kompetensi inti yang menghambat pertumbuhan unit bisnis.').split('\n')[0])}</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">${escapeHtml(data.title)} — intervensi pelatihan terstruktur dengan pendekatan "${(insights?.differentiators?.[0] || 'studi kasus industri').slice(0, 60)}".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs">${diffs.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes">${outcomes.map(o => `<li>${escapeHtml(o)}</li>`).join('')}</ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">${escapeHtml(investment)}<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>${escapeHtml(decisionMakers)}</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+// Build "Mengapa Memilih Kami" section — uses insights or sensible defaults.
+function buildWhyUsSectionHTML(data) {
+  const insights = Store.get('pg_insights_background', null) || Store.get('pg_insights_description', null);
+  const diffs = Array.isArray(insights?.differentiators) && insights.differentiators.length
+    ? insights.differentiators.slice(0, 5)
+    : ['Tenaga pengajar tersertifikasi BNSP', 'Metodologi blended (live + e-learning)', 'Studi kasus dari industri klien', 'Garansi pascapelatihan 30 hari', 'Sertifikat & laporan evaluasi'];
+  const icons = ['🏅','🧪','📚','🛡️','📊','💬'];
+  return `
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan ${escapeHtml(data.organizer || 'kami')} adalah mitra yang tepat untuk kebutuhan ${escapeHtml(data.company || 'klien Anda')}:</p>
+        <div class="whyus-grid">
+          ${diffs.map((d, i) => `
+            <div class="whyus-card">
+              <div class="whyus-icon">${icons[i % icons.length]}</div>
+              <div class="whyus-text">${escapeHtml(d)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+// Build ROI / Expected Outcomes section.
+function buildRoiSectionHTML() {
+  const insights = Store.get('pg_insights_description', null) || Store.get('pg_insights_background', null);
+  const outcomes = Array.isArray(insights?.outcomes) && insights.outcomes.length
+    ? insights.outcomes.slice(0, 5)
+    : [
+        'Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan',
+        'Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama',
+        'Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit',
+        'Penghematan biaya rekrutmen akibat retensi yang lebih baik',
+        'Persiapan audit / sertifikasi selesai lebih cepat'
+      ];
+  const proof = Array.isArray(insights?.proofPoints) && insights.proofPoints.length
+    ? insights.proofPoints.slice(0, 2)
+    : ['Diselenggarakan untuk 30+ perusahaan manufaktur & FMCG', 'NPS rata-rata 4,7/5 dari 200+ peserta'];
+  return `
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          ${outcomes.map(o => `<div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">${escapeHtml(o)}</div></div>`).join('')}
+        </div>
+        ${proof.length ? `<div class="roi-proof"><strong>Bukti:</strong> ${proof.map(escapeHtml).join(' • ')}</div>` : ''}
+      </div>
+    </section>
+  `;
+}
+
+// Dynamic schedule rows based on date range (falls back to 3 days).
+function buildScheduleDays(startDate, endDate) {
+  const defaults = ['Hari 1', 'Hari 2', 'Hari 3'];
+  if (!startDate) return defaults;
+  const a = new Date(startDate); const b = new Date(endDate || startDate);
+  if (isNaN(a) || isNaN(b)) return defaults;
+  const days = Math.max(1, Math.round((b - a) / 86400000) + 1);
+  const labels = ['Pembukaan & fondasi', 'Pendalaman & latihan terapan', 'Studi kasus & presentasi', 'Uji kompetensi & rencana aksi', 'Coaching & konsolidasi', 'Workshop lanjutan', 'Implementasi & monitoring'];
+  const out = [];
+  for (let i = 0; i < days; i++) {
+    out.push(`Hari ${i + 1}${labels[i] ? ' — ' + labels[i] : ''}`);
+  }
+  return out;
+}
 
 document.getElementById('exportPdfBtn').addEventListener('click', () => {
   const data = getProposalData();
@@ -1112,11 +1516,14 @@ function buildProposalDocx(data) {
 
   // --- TOC Page ---
   const toc = [
+    'ES Ringkasan Eksekutif',
     '01 Latar Belakang',
     '02 Deskripsi Pelatihan',
     '03 Tujuan',
     '04 Peserta',
     '05 Persyaratan Peserta',
+    '05A Mengapa Memilih Kami',
+    '05B Dampak & ROI',
     '06 Jadwal Pelaksanaan',
     '07 Investasi',
     '08 Fasilitas',
@@ -1127,11 +1534,11 @@ function buildProposalDocx(data) {
     return new Paragraph({
       tabStops: [{ type: TabStopType.RIGHT, position: 9000, leader: 'dot' }],
       children: [
-        new TextRun({ text: num + '   ', bold: true, size: 28, color: COL_PRIMARY, font: fonts.heading }),
-        new TextRun({ text: title, size: 24, color: '0F172A' }),
-        new TextRun({ text: '\t' + String(i + 2).padStart(2, '0'), size: 24, bold: true, color: '64748B' })
+        new TextRun({ text: num + '   ', bold: true, size: 24, color: COL_PRIMARY, font: fonts.heading }),
+        new TextRun({ text: title, size: 22, color: '0F172A' }),
+        new TextRun({ text: '\t' + String(i + 2).padStart(2, '0'), size: 22, bold: true, color: '64748B' })
       ],
-      spacing: { after: 200 }
+      spacing: { after: 160 }
     });
   });
 
@@ -1230,25 +1637,119 @@ function buildProposalDocx(data) {
           })
         )
       }),
-      ...[
-        ['Hari 1', 'Pembukaan, pengenalan materi, sesi inti 1 & 2'],
-        ['Hari 2', 'Sesi inti 3, latihan terapan, diskusi kelompok'],
-        ['Hari 3', 'Studi kasus, presentasi, uji kompetensi, penutupan']
-      ].map(([a, b]) =>
-        new TableRow({
+      ...buildScheduleDays(data.startDate, data.endDate).map(label => {
+        const [day, agenda = ''] = String(label).split(' — ');
+        return new TableRow({
           children: [
-            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: a, bold: true, size: 22 })] })] }),
-            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: b, size: 22 })] })] })
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: day, bold: true, size: 22 })] })] }),
+            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: agenda || 'Sesi inti & latihan terapan', size: 22 })] })] })
           ]
-        })
-      )
+        });
+      })
     ]
   });
 
   // Build document
+  const insights = Store.get('pg_insights_background', null) || {};
+  const insightDiffs = Array.isArray(insights.differentiators) && insights.differentiators.length
+    ? insights.differentiators.slice(0, 3) : ['Tenaga pengajar tersertifikasi', 'Metodologi berbasis studi kasus', 'Garansi pascapelatihan'];
+  const insightOuts = Array.isArray(insights.outcomes) && insights.outcomes.length
+    ? insights.outcomes.slice(0, 4) : ['Peserta memahami kerangka kerja', 'Peserta mampu mengaplikasikan', 'Perusahaan memiliki blueprint implementasi'];
+  const execSummaryDocx = [
+    new Paragraph({ children: [new PageBreak()] }),
+    H1('Ringkasan Eksekutif'),
+    new Paragraph({
+      children: [new TextRun({ text: insights.headline || data.title, bold: true, size: 26, color: COL_PRIMARY, font: fonts.heading })],
+      spacing: { after: 80 }
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: `Disusun untuk ${data.company || '-'} • oleh ${data.organizer || '-'}${fmtDateRange(data.startDate, data.endDate) ? ' • ' + fmtDateRange(data.startDate, data.endDate) : ''}`, italics: true, size: 20, color: '64748B' })],
+      spacing: { after: 200 }
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: 'MASALAH: ', bold: true, size: 22, color: 'DC2626' }), new TextRun({ text: ((Store.get('pg_proposal', {}).topPainPoints || 'Kesenjangan kompetensi inti yang menghambat pertumbuhan unit bisnis.')).split('\n')[0], size: 22 })],
+      spacing: { after: 100 }
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: 'SOLUSI: ', bold: true, size: 22, color: '059669' }), new TextRun({ text: `${data.title} — intervensi pelatihan terstruktur dengan pendekatan studi kasus industri.`, size: 22 })],
+      spacing: { after: 200 }
+    }),
+    new Paragraph({ children: [new TextRun({ text: 'MENGAPA KAMI (3 Pembeda)', bold: true, size: 22, color: COL_PRIMARY })], spacing: { after: 80 } }),
+    ...insightDiffs.map(d => new Paragraph({
+      children: [new TextRun({ text: '✓ ', bold: true, color: '10B981', size: 22 }), new TextRun({ text: d, size: 22 })],
+      spacing: { after: 80 }, indent: { left: 200 }
+    })),
+    new Paragraph({ children: [new TextRun({ text: 'HASIL TERUKUR YANG DIHARAPKAN', bold: true, size: 22, color: COL_PRIMARY })], spacing: { before: 200, after: 80 } }),
+    ...insightOuts.map(o => new Paragraph({
+      children: [new TextRun({ text: '• ', bold: true, color: COL_PRIMARY, size: 22 }), new TextRun({ text: o, size: 22 })],
+      spacing: { after: 80 }, indent: { left: 200 }
+    })),
+    new Paragraph({
+      children: [
+        new TextRun({ text: 'INVESTASI: ', bold: true, size: 24, color: COL_PRIMARY }),
+        new TextRun({ text: data.pricePerPerson || '-', bold: true, size: 24, color: '0F172A' }),
+        new TextRun({ text: ' /peserta', size: 22, color: '64748B' })
+      ],
+      spacing: { before: 240, after: 80 }
+    })
+  ];
+
+  const whyUsDocx = [
+    new Paragraph({ children: [new TextRun({ text: '05A', bold: true, size: 64, color: COL_PRIMARY, font: fonts.heading })], spacing: { after: 100 } }),
+    new Paragraph({
+      children: [new TextRun({ text: 'Mengapa Memilih Kami', bold: true, size: 32, color: '0F172A', font: fonts.heading })],
+      heading: HeadingLevel.HEADING_2,
+      spacing: { after: 200 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: COL_PRIMARY, space: 1 } }
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: `Lima pembeda yang membuat ${data.organizer || 'kami'} mitra pilihan ${data.company || 'klien'}:`, size: 22 })],
+      spacing: { after: 200 }
+    }),
+    ...(Array.isArray(insights.differentiators) && insights.differentiators.length
+      ? insights.differentiators.slice(0, 5)
+      : ['Tenaga pengajar tersertifikasi BNSP', 'Metodologi blended (live + e-learning)', 'Studi kasus dari industri klien', 'Garansi pascapelatihan 30 hari', 'Sertifikat & laporan evaluasi']
+    ).map((d, i) => new Paragraph({
+      children: [
+        new TextRun({ text: `${['🏅','🧪','📚','🛡️','📊'][i] || '✓'}  `, size: 24 }),
+        new TextRun({ text: d, size: 22, color: '0F172A' })
+      ],
+      spacing: { after: 100 }, indent: { left: 200 }
+    })),
+    new Paragraph({ text: '', spacing: { after: 360 } })
+  ];
+
+  const roiDocx = [
+    new Paragraph({ children: [new TextRun({ text: '05B', bold: true, size: 64, color: COL_PRIMARY, font: fonts.heading })], spacing: { after: 100 } }),
+    new Paragraph({
+      children: [new TextRun({ text: 'Dampak & ROI yang Diharapkan', bold: true, size: 32, color: '0F172A', font: fonts.heading })],
+      heading: HeadingLevel.HEADING_2,
+      spacing: { after: 200 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: COL_PRIMARY, space: 1 } }
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: 'Payback period investasi pelatihan biasanya 3-6 bulan melalui efisiensi, retensi, dan revenue:', size: 22 })],
+      spacing: { after: 160 }
+    }),
+    ...(Array.isArray(insights.outcomes) && insights.outcomes.length
+      ? insights.outcomes.slice(0, 5)
+      : ['Penurunan waktu onboarding dari 3 bulan ke 1 bulan', 'Peningkatan produktivitas tim 15-20% dalam 90 hari', 'Standarisasi SOP dan blueprint', 'Penghematan biaya rekrutmen', 'Persiapan audit/sertifikasi lebih cepat']
+    ).map((o, i) => new Paragraph({
+      children: [
+        new TextRun({ text: '↗ ', bold: true, color: '10B981', size: 24 }),
+        new TextRun({ text: o, size: 22 })
+      ],
+      spacing: { after: 100 }, indent: { left: 200 }
+    })),
+    new Paragraph({ text: '', spacing: { after: 360 } })
+  ];
+
   const children = [
     ...coverBlocks,
     new Paragraph({ children: [new PageBreak()] }),
+
+    // Executive Summary
+    ...execSummaryDocx,
 
     // TOC Page
     H1('Daftar Isi'),
@@ -1265,6 +1766,9 @@ function buildProposalDocx(data) {
     ...sectionContent('02', 'Deskripsi Pelatihan', data.body.description),
     ...sectionContent('03', 'Tujuan', data.body.objectives, parseBullets(data.body.objectives)),
     ...sectionContent('04', 'Peserta', data.body.audience),
+    ...sectionContent('05', 'Persyaratan Peserta', data.body.requirements, parseBullets(data.body.requirements), true),
+    ...whyUsDocx,
+    ...roiDocx,
     ...sectionContent('05', 'Persyaratan Peserta', data.body.requirements, parseBullets(data.body.requirements), true),
 
     // Jadwal (6)
@@ -1320,12 +1824,39 @@ function buildProposalDocx(data) {
 
     // Penutup (9)
     ...sectionContent('09', 'Penutup', data.body.closing),
-    ...(data.cta ? [new Paragraph({
-      shading: { type: ShadingType.CLEAR, fill: COL_PRIMARY, color: 'auto' },
-      children: [new TextRun({ text: data.cta, bold: true, color: 'FFFFFF', size: 26 })],
-      spacing: { before: 200, after: 200 },
-      indent: { left: 280, right: 280 }
-    })] : [])
+    ...(data.cta ? [
+      new Paragraph({
+        children: [new TextRun({ text: data.cta || 'Mari wujudkan bersama.', bold: true, color: 'FFFFFF', size: 28 })],
+        shading: { type: ShadingType.CLEAR, fill: COL_PRIMARY, color: 'auto' },
+        spacing: { before: 200, after: 80 },
+        indent: { left: 280, right: 280 }
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({ text: 'Masa berlaku penawaran: ', bold: true, size: 22, color: '0F172A' }),
+          new TextRun({ text: fmtDateIndo(offerValidityDate(14)), bold: true, size: 22, color: 'DC2626' })
+        ],
+        spacing: { after: 80 }, indent: { left: 280, right: 280 }
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({ text: 'Kontak Penjualan: ', bold: true, size: 22, color: '0F172A' }),
+          new TextRun({ text: `${data.organizer || 'Tim AE'} • WA 08XX-XXXX-XXXX • email@vendor.co.id`, size: 22 })
+        ],
+        spacing: { after: 80 }, indent: { left: 280, right: 280 }
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({ text: 'Kontak Administrasi: ', bold: true, size: 22, color: '0F172A' }),
+          new TextRun({ text: 'Tim Admin Proyek • WA 08XX-XXXX-XXXX • admin@vendor.co.id', size: 22 })
+        ],
+        spacing: { after: 240 }, indent: { left: 280, right: 280 }
+      }),
+      new Paragraph({ children: [new TextRun({ text: 'Hormat kami,', size: 22 })], indent: { left: 280, right: 280 }, spacing: { after: 80 } }),
+      new Paragraph({ text: '', spacing: { after: 600 } }),
+      new Paragraph({ children: [new TextRun({ text: data.organizer || 'Account Executive', bold: true, size: 26, color: '0F172A' })], indent: { left: 280, right: 280 } }),
+      new Paragraph({ children: [new TextRun({ text: `Account Executive • ${data.organizer || ''}`, italics: true, size: 20, color: '64748B' })], indent: { left: 280, right: 280 } })
+    ] : [])
   ];
 
   return new Document({
