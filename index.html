@@ -708,6 +708,24 @@
           </div>
 
           <div class="form-card">
+            <h3 class="section-title">Draft Saya</h3>
+            <p class="muted">Simpan proposal saat ini sebagai draft dengan nama, atau muat draft yang pernah disimpan.</p>
+            <div class="draft-save-row">
+              <input type="text" id="draftNameInput" class="input" placeholder="Nama draft (mis. 'Proposal PT ABC — v1')" maxlength="80" autocomplete="off" />
+              <button class="btn btn-primary" id="saveDraftBtn" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Simpan sebagai Draft</span>
+              </button>
+            </div>
+            <div class="draft-meta-row">
+              <span class="draft-count" id="draftsCount">0 draft tersimpan</span>
+              <span class="draft-storage-hint" id="draftsStorageHint"></span>
+            </div>
+            <div class="draft-list" id="draftsList"></div>
+            <p class="draft-empty" id="draftsEmpty">Belum ada draft. Isi form lalu klik "Simpan sebagai Draft".</p>
+          </div>
+
+          <div class="form-card">
             <h3 class="section-title">Generate Proposal</h3>
             <p class="muted">Pastikan semua langkah sudah terisi. Sistem akan menyusunnya menjadi proposal utuh.</p>
             <div class="generate-actions">
@@ -744,6 +762,18 @@
   </div>
 
   <div id="toast" class="toast"></div>
+
+  <div id="confirmModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-card" role="document">
+      <h3 class="modal-title" id="confirmTitle">Konfirmasi</h3>
+      <p class="modal-message" id="confirmMessage">Apakah Anda yakin?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="confirmCancel" type="button" data-modal-close>Batal</button>
+        <button class="btn btn-danger" id="confirmOk" type="button">Ya, lanjut</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

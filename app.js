@@ -158,6 +158,31 @@ function enterApp() {
   document.getElementById('userAvatar').textContent = (currentUser.name || '?')[0].toUpperCase();
   loadProposalState();
   loadAiSettings();
+  loadDraftsList();
+
+  // Drafts — Settings step
+  const saveDraftBtn = document.getElementById('saveDraftBtn');
+  const draftNameInput = document.getElementById('draftNameInput');
+  if (saveDraftBtn) saveDraftBtn.addEventListener('click', () => saveDraft());
+  if (draftNameInput) draftNameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveDraft();
+    }
+  });
+  const draftsListEl = document.getElementById('draftsList');
+  if (draftsListEl) draftsListEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const row = btn.closest('.draft-row');
+    if (!row) return;
+    const id = row.dataset.id;
+    const act = btn.dataset.act;
+    if (act === 'load') loadDraftById(id);
+    else if (act === 'rename') renameDraftById(id);
+    else if (act === 'delete') deleteDraftById(id);
+  });
+
   showStep(currentStep);
 }
 
@@ -530,6 +555,326 @@ function loadProposalState() {
   if (Array.isArray(s.materials)) {
     renderMaterialsRows(s.materials);
   }
+}
+
+// ---------- Drafts (Save As Draft with name) ----------
+const DRAFTS_KEY = 'pg_drafts';
+const DRAFTS_META_KEY = 'pg_drafts_meta';
+
+const Drafts = {
+  list() { return Store.get(DRAFTS_META_KEY, []); },
+  saveMeta(meta) { Store.set(DRAFTS_META_KEY, meta); },
+  getPayload(id) {
+    const all = Store.get(DRAFTS_KEY, {});
+    return all[id] || null;
+  },
+  setPayload(id, payload) {
+    const all = Store.get(DRAFTS_KEY, {});
+    all[id] = payload;
+    Store.set(DRAFTS_KEY, all);
+  },
+  remove(id) {
+    const all = Store.get(DRAFTS_KEY, {});
+    delete all[id];
+    Store.set(DRAFTS_KEY, all);
+    const meta = Drafts.list().filter(m => m.id !== id);
+    Drafts.saveMeta(meta);
+  },
+  storageSize() {
+    const payloads = Store.get(DRAFTS_KEY, {});
+    const meta = Drafts.list();
+    return JSON.stringify(payloads).length + JSON.stringify(meta).length;
+  }
+};
+
+function generateDraftId() {
+  return 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+// Read current form state as a snapshot object (mirrors saveProposalState but returns instead of writing)
+function readDraftPayload() {
+  const selected = document.querySelector('.template-card.selected');
+  const snapshot = {};
+  snapshot.template = selected ? selected.dataset.template : 'classic';
+  ['companyName','organizerName','proposalTitle','competencyUnit','cta','startDate','endDate','venue','pricePerPerson','minParticipants','priceNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    snapshot[id] = el ? el.value : '';
+  });
+  CLIENT_BRIEF_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    snapshot[id] = el ? el.value : '';
+  });
+  ['background','description','objectives','audience','closing'].forEach(id => {
+    const el = document.getElementById(id);
+    snapshot[id] = el ? el.value : '';
+  });
+  const rEl = document.getElementById('requirements');
+  snapshot.requirements = rEl ? rEl.value : '';
+  snapshot.facilities = Array.from(document.querySelectorAll('#facilities input:checked')).map(i => i.value);
+  snapshot.materials = readMaterialsFromUI();
+  return snapshot;
+}
+
+// Persist a snapshot to drafts storage. Returns the new meta entry.
+function commitDraft(metaEntry, payload) {
+  Drafts.setPayload(metaEntry.id, payload);
+  const list = Drafts.list();
+  const existingIdx = list.findIndex(m => m.id === metaEntry.id);
+  if (existingIdx >= 0) list[existingIdx] = metaEntry;
+  else list.unshift(metaEntry);
+  Drafts.saveMeta(list);
+}
+
+async function saveDraft(nameOverride) {
+  const input = document.getElementById('draftNameInput');
+  let name = (nameOverride ?? (input ? input.value : '')).trim();
+  if (!name) {
+    toast('Nama draft wajib diisi', 'error');
+    if (input) input.focus();
+    return;
+  }
+  if (name.length > 80) name = name.slice(0, 80);
+  // Check uniqueness — if collision, ask to overwrite
+  const existing = Drafts.list().find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    const ok = await openConfirmDialog({
+      title: 'Timpa Draft?',
+      message: `Draft dengan nama "${existing.name}" sudah ada. Timpa dengan data saat ini?`,
+      okText: 'Timpa'
+    });
+    if (!ok) return;
+    const payload = readDraftPayload();
+    commitDraft({
+      id: existing.id,
+      name: existing.name,
+      updatedAt: new Date().toISOString()
+    }, payload);
+    toast(`Draft "${existing.name}" diperbarui`, 'success');
+  } else {
+    const id = generateDraftId();
+    const payload = readDraftPayload();
+    commitDraft({
+      id,
+      name,
+      updatedAt: new Date().toISOString()
+    }, payload);
+    toast(`Draft "${name}" disimpan`, 'success');
+  }
+  if (input) input.value = '';
+  loadDraftsList();
+}
+
+function applyDraftPayload(payload) {
+  if (!payload) return;
+  document.querySelectorAll('.template-card').forEach(c => {
+    const isSel = c.dataset.template === payload.template;
+    c.classList.toggle('selected', isSel);
+    const radio = c.querySelector('input');
+    if (radio) radio.checked = isSel;
+  });
+  ['companyName','organizerName','proposalTitle','competencyUnit','cta','startDate','endDate','venue','pricePerPerson','minParticipants','priceNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && payload[id] != null) el.value = payload[id];
+  });
+  CLIENT_BRIEF_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && payload[id] != null) el.value = payload[id];
+  });
+  ['background','description','objectives','audience','closing'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && payload[id] != null) el.value = payload[id];
+  });
+  if (payload.requirements != null) {
+    const el = document.getElementById('requirements');
+    if (el) el.value = payload.requirements;
+  }
+  if (Array.isArray(payload.facilities)) {
+    document.querySelectorAll('#facilities input').forEach(i => {
+      i.checked = payload.facilities.includes(i.value);
+    });
+  }
+  if (Array.isArray(payload.materials)) {
+    renderMaterialsRows(payload.materials);
+  } else {
+    renderMaterialsRows([]);
+  }
+}
+
+async function loadDraftById(id) {
+  const payload = Drafts.getPayload(id);
+  if (!payload) {
+    toast('Draft tidak ditemukan', 'error');
+    return;
+  }
+  applyDraftPayload(payload);
+  // mirror to current auto-save slot
+  saveProposalState();
+  // populate name input for easy re-save
+  const meta = Drafts.list().find(m => m.id === id);
+  const input = document.getElementById('draftNameInput');
+  if (input && meta) input.value = meta.name;
+  toast(`Draft "${meta ? meta.name : ''}" dimuat`, 'success');
+}
+
+async function deleteDraftById(id) {
+  const meta = Drafts.list().find(m => m.id === id);
+  const ok = await openConfirmDialog({
+    title: 'Hapus Draft?',
+    message: `Draft "${meta ? meta.name : ''}" akan dihapus permanen dari browser.`,
+    okText: 'Hapus'
+  });
+  if (!ok) return;
+  Drafts.remove(id);
+  toast('Draft dihapus', 'success');
+  loadDraftsList();
+}
+
+async function renameDraftById(id) {
+  const meta = Drafts.list().find(m => m.id === id);
+  if (!meta) return;
+  const newName = (prompt('Nama baru untuk draft ini:', meta.name) || '').trim();
+  if (!newName || newName === meta.name) return;
+  const trimmed = newName.slice(0, 80);
+  // Collision check (excluding self)
+  const collision = Drafts.list().find(m => m.id !== id && m.name.toLowerCase() === trimmed.toLowerCase());
+  if (collision) {
+    toast('Nama sudah dipakai draft lain', 'error');
+    return;
+  }
+  const updated = { ...meta, name: trimmed, updatedAt: new Date().toISOString() };
+  const list = Drafts.list().map(m => m.id === id ? updated : m);
+  Drafts.saveMeta(list);
+  toast('Draft diubah namanya', 'success');
+  loadDraftsList();
+}
+
+function estimatePayloadSize(payload) {
+  return JSON.stringify(payload || {}).length;
+}
+
+function updateStorageHint() {
+  const meta = Drafts.list();
+  const n = meta.length;
+  const hint = document.getElementById('draftsStorageHint');
+  const count = document.getElementById('draftsCount');
+  if (count) count.textContent = `${n} draft tersimpan`;
+  if (!hint) return;
+  hint.classList.remove('warn', 'danger');
+  if (n >= 80) {
+    hint.textContent = 'penuh — hapus beberapa';
+    hint.classList.add('danger');
+  } else if (n >= 50) {
+    hint.textContent = 'mulai banyak';
+    hint.classList.add('warn');
+  } else if (n > 0) {
+    const totalBytes = Drafts.storageSize();
+    const kb = (totalBytes / 1024).toFixed(1);
+    hint.textContent = `${kb} KB`;
+  } else {
+    hint.textContent = '';
+  }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function formatTimeAgo(iso) {
+  if (!iso) return '';
+  const then = new Date(iso).getTime();
+  if (isNaN(then)) return '';
+  const diff = Date.now() - then;
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'baru saja';
+  if (m < 60) return `${m} menit lalu`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} jam lalu`;
+  const d = Math.floor(h / 24);
+  if (d < 7) return `${d} hari lalu`;
+  return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderDraftsList() {
+  const list = document.getElementById('draftsList');
+  const empty = document.getElementById('draftsEmpty');
+  const meta = Drafts.list();
+  if (!list) return;
+  list.innerHTML = '';
+  if (meta.length === 0) {
+    if (empty) empty.hidden = false;
+    updateStorageHint();
+    return;
+  }
+  if (empty) empty.hidden = true;
+  meta.forEach(m => {
+    const payload = Drafts.getPayload(m.id) || {};
+    const fields = ['companyName','proposalTitle','organizerName'];
+    const filled = fields.filter(f => (payload[f] || '').trim()).length;
+    const summary = payload.companyName || payload.proposalTitle || payload.organizerName || '(kosong)';
+    const row = document.createElement('div');
+    row.className = 'draft-row';
+    row.dataset.id = m.id;
+    row.innerHTML = `
+      <div class="draft-row-info">
+        <div class="draft-row-name">${escapeHtml(m.name)}</div>
+        <div class="draft-row-meta">${escapeHtml(summary)} · ${formatTimeAgo(m.updatedAt)}</div>
+      </div>
+      <div class="draft-row-actions">
+        <button class="btn-icon primary" data-act="load" title="Muat draft" aria-label="Muat draft">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+        </button>
+        <button class="btn-icon" data-act="rename" title="Ubah nama" aria-label="Ubah nama">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        </button>
+        <button class="btn-icon danger" data-act="delete" title="Hapus" aria-label="Hapus">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  updateStorageHint();
+}
+
+function openConfirmDialog({ title, message, okText = 'Ya, lanjut' }) {
+  return new Promise(resolve => {
+    const modal = document.getElementById('confirmModal');
+    const titleEl = document.getElementById('confirmTitle');
+    const msgEl = document.getElementById('confirmMessage');
+    const okBtn = document.getElementById('confirmOk');
+    const cancelBtn = document.getElementById('confirmCancel');
+    if (!modal) return resolve(false);
+    titleEl.textContent = title;
+    msgEl.textContent = message;
+    okBtn.textContent = okText;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    const cleanup = (result) => {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+      backdrop.removeEventListener('click', onCancel);
+      document.removeEventListener('keydown', onKey);
+      resolve(result);
+    };
+    const onOk = () => cleanup(true);
+    const onCancel = () => cleanup(false);
+    const onKey = (e) => { if (e.key === 'Escape') onCancel(); };
+    const backdrop = modal.querySelector('.modal-backdrop');
+
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+    if (backdrop) backdrop.addEventListener('click', onCancel);
+    document.addEventListener('keydown', onKey);
+  });
+}
+
+function loadDraftsList() {
+  renderDraftsList();
 }
 
 // ---------- Materials (Step 8) ----------
