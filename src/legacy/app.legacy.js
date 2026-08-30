@@ -1618,9 +1618,6 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   toast('Proposal siap — tinggal di-export', 'success');
 });
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
-}
 function nl2br(str) { return escapeHtml(str).replace(/\n/g, '<br/>'); }
 
 // Build Executive Summary bullets from the body + client brief + insights.
