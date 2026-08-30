@@ -2,6 +2,8 @@
 
 Aplikasi web sederhana untuk membuat proposal pelatihan profesional dengan bantuan AI. Aplikasi ini sepenuhnya client-side (HTML + CSS + vanilla JS) — tidak butuh server.
 
+> **Catatan UI**: aplikasi menggunakan **horizontal stepper** di atas (bukan sidebar) dengan 13 langkah bernomor. Step aktif = filled primary, step yang sudah dilewati = checkmark hijau, step yang akan datang = outline. Klik chip untuk melompat ke step itu.
+
 ## 🚀 Cara Mengakses
 
 **Live (GitHub Pages)**: Buka **[https://fajar-hse.github.io/Proposal-Generator-App/](https://fajar-hse.github.io/Proposal-Generator-App/)**
