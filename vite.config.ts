@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/Proposal-Generator-App/' : '/',
   server: {
     headers: {
       // CSP applied also via meta; header is stronger when served via Vite preview/proxy
