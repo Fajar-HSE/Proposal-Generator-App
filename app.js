@@ -220,11 +220,6 @@ auth.onAuthStateChanged(fbUser => {
   enterApp();
 });
 
-// ---------- Sidebar mobile toggle ----------
-document.getElementById('mobileToggle')?.addEventListener('click', () => {
-  document.querySelector('.sidebar')?.classList.toggle('open');
-});
-
 // ---------- Navigation ----------
 let currentStep = 1;
 const stepTitles = {
@@ -251,8 +246,8 @@ const aiSteps = {
   5: { id: 'description', label: 'Deskripsi', promptKey: 'description', framework: 'FAB' },
   6: { id: 'objectives', label: 'Tujuan', promptKey: 'objectives', framework: 'FAB' },
   7: { id: 'audience', label: 'Peserta', promptKey: 'audience', framework: 'PERSONA' },
-  8: { id: 'requirements', label: 'Persyaratan Peserta', promptKey: 'requirements', framework: 'CHECKLIST' },
-  12: { id: 'closing', label: 'Penutup', promptKey: 'closing', framework: 'ASSUMPTIVE_CLOSE' }
+  9: { id: 'requirements', label: 'Persyaratan Peserta', promptKey: 'requirements', framework: 'CHECKLIST' },
+  13: { id: 'closing', label: 'Penutup', promptKey: 'closing', framework: 'ASSUMPTIVE_CLOSE' }
 };
 
 // Persuasion frameworks the prompts reference per section type.
@@ -305,7 +300,23 @@ function showStep(step) {
   const el = document.querySelector(`.step[data-step="${step}"]`);
   if (el) el.style.display = 'block';
 
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', String(n.dataset.step) === String(step)));
+  // Highlight active chip and mark previously visited steps as completed
+  const sNum = Number(step);
+  document.querySelectorAll('.step-chip').forEach(c => {
+    const cNum = Number(c.dataset.step);
+    if (!Number.isNaN(cNum)) {
+      c.classList.toggle('active', cNum === sNum);
+      c.classList.toggle('completed', !Number.isNaN(sNum) && cNum < sNum);
+    } else if (c.dataset.step === String(step)) {
+      c.classList.add('active');
+    }
+  });
+
+  // Auto-scroll active chip into view inside the horizontally scrolling stepper
+  const activeChip = document.querySelector('.step-chip.active');
+  if (activeChip) {
+    activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
 
   if (aiSteps[step]) buildAiStep(step);
 
@@ -320,14 +331,21 @@ function showStep(step) {
   updateProgress(step);
 
   saveProposalState();
-  // Close mobile sidebar
-  document.querySelector('.sidebar')?.classList.remove('open');
 }
 
-document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', e => {
-  e.preventDefault();
-  showStep(n.dataset.step);
-}));
+// Step chips (top horizontal stepper) — click to jump
+document.querySelectorAll('.step-chip').forEach(chip => {
+  chip.addEventListener('click', e => {
+    e.preventDefault();
+    const target = chip.dataset.step;
+    if (target) showStep(target);
+  });
+});
+
+// Settings icon in top-right jumps to settings
+document.getElementById('settingsBtn')?.addEventListener('click', () => {
+  showStep('settings');
+});
 
 document.getElementById('prevBtn').addEventListener('click', () => {
   if (currentStep === 'settings') return;
