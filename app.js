@@ -235,11 +235,12 @@ const stepTitles = {
   5: 'Deskripsi',
   6: 'Tujuan',
   7: 'Peserta',
-  8: 'Persyaratan Peserta',
-  9: 'Tanggal & Venue',
-  10: 'Biaya',
-  11: 'Fasilitas',
-  12: 'Penutup',
+  8: 'Materi Pelatihan',
+  9: 'Persyaratan Peserta',
+  10: 'Tanggal & Venue',
+  11: 'Biaya',
+  12: 'Fasilitas',
+  13: 'Penutup',
   settings: 'Pengaturan AI & Generate'
 };
 
@@ -260,7 +261,8 @@ const FRAMEWORKS = {
   FAB: 'Gunakan kerangka **Feature → Advantage → Benefit** untuk setiap poin: Fitur konkret materi/metode, Keunggulan dibanding alternatif, Manfaat terukur yang dirasakan klien.',
   PERSONA: 'Gunakan kerangka **Persona → Pains → Gains → Channels**: deskripsikan profil ideal peserta, apa yang mereka keluhkan hari ini, apa yang mereka ingin capai, dan bagaimana pelatihan ini menjangkau mereka.',
   CHECKLIST: 'Setiap poin harus **dapat diverifikasi** oleh panitia (laptop, sertifikat, presensi, pre-test, dsb). Hindari poin generik seperti "bersedia belajar".',
-  ASSUMPTIVE_CLOSE: 'Gunakan **assumptive close**: asumsikan klien akan lanjut, sebutkan **deadline konfirmasi**, **masa berlaku penawaran**, **satu aksi spesifik** yang klien lakukan berikutnya, plus **dua kontak** (penjualan & admin). Hindari "silakan hubungi kami jika berminat".'
+  ASSUMPTIVE_CLOSE: 'Gunakan **assumptive close**: asumsikan klien akan lanjut, sebutkan **deadline konfirmasi**, **masa berlaku penawaran**, **satu aksi spesifik** yang klien lakukan berikutnya, plus **dua kontak** (penjualan & admin). Hindari "silakan hubungi kami jika berminat".',
+  OUTLINE: 'Hasilkan **KURIKULUM TERSTRUKTUR** dalam JSON array (6-10 sesi). Tiap sesi: { "title", "duration" (mis. "2 jam" atau "90 menit"), "method" (salah satu: Ceramah, Diskusi, Studi Kasus, Latihan/Praktik, Workshop, e-Learning, Coaching), "description" (2-3 kalimat: sub-topik spesifik + output/artefak yang didapat peserta) }. Urutan harus logis: fondasi → pendalaman → studi kasus → implementasi.Industri klien wajib dimasukkan ke deskripsi agar kurikulum terasa relevan.'
 };
 
 // Banned phrases that kill persuasion (the AI replaces with specifics).
@@ -277,7 +279,9 @@ const BANNED_PHRASES = [
   'revolusi industri 4.0'
 ];
 
-function totalSteps() { return 12; }
+const METHOD_CHOICES = ['Ceramah', 'Diskusi', 'Studi Kasus', 'Latihan/Praktik', 'Workshop', 'e-Learning', 'Coaching', 'Presentasi'];
+
+function totalSteps() { return 13; }
 
 function updateProgress(step) {
   if (step === 'settings') {
@@ -304,6 +308,12 @@ function showStep(step) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', String(n.dataset.step) === String(step)));
 
   if (aiSteps[step]) buildAiStep(step);
+
+  if (String(step) === '8') {
+    // When entering Materi step, ensure rows exist + refresh count
+    seedMaterialsIfEmpty();
+    updateMaterialsCount();
+  }
 
   document.getElementById('prevBtn').style.display = step === 'settings' ? 'none' : '';
   document.getElementById('nextBtn').style.display = step === 'settings' ? 'none' : '';
@@ -470,6 +480,7 @@ function saveProposalState() {
   const rEl = document.getElementById('requirements');
   state.requirements = rEl ? rEl.value : (state.requirements || '');
   state.facilities = Array.from(document.querySelectorAll('#facilities input:checked')).map(i => i.value);
+  state.materials = readMaterialsFromUI();
   Store.set('pg_proposal', state);
 }
 
@@ -498,6 +509,69 @@ function loadProposalState() {
     const el = document.getElementById('requirements');
     if (el) el.value = s.requirements;
   }
+  if (Array.isArray(s.materials)) {
+    renderMaterialsRows(s.materials);
+  }
+}
+
+// ---------- Materials (Step 8) ----------
+function readMaterialsFromUI() {
+  const rows = Array.from(document.querySelectorAll('#materialsList .material-row'));
+  return rows.map((row, i) => ({
+    no: i + 1,
+    title: (row.querySelector('[data-fld="title"]')?.value || '').trim(),
+    duration: (row.querySelector('[data-fld="duration"]')?.value || '').trim(),
+    method: (row.querySelector('[data-fld="method"]')?.value || '').trim(),
+    description: (row.querySelector('[data-fld="description"]')?.value || '').trim()
+  })).filter(m => m.title || m.description);
+}
+
+function renderMaterialsRows(materials) {
+  const list = document.getElementById('materialsList');
+  if (!list) return;
+  list.innerHTML = '';
+  materials.forEach(m => list.appendChild(buildMaterialRow(m)));
+  updateMaterialsCount();
+}
+
+function buildMaterialRow(m) {
+  m = m || { title: '', duration: '2 jam', method: 'Ceramah', description: '' };
+  const row = document.createElement('div');
+  row.className = 'material-row';
+  row.innerHTML = `
+    <input data-fld="title" type="text" class="input" placeholder="Topik sesi (cth: Funnel Analysis)" value="${escapeHtml(m.title || '')}" />
+    <input data-fld="duration" type="text" class="input" placeholder="Durasi (cth: 2 jam)" value="${escapeHtml(m.duration || '')}" />
+    <select data-fld="method" class="input">
+      ${METHOD_CHOICES.map(opt => `<option value="${escapeHtml(opt)}"${(m.method || '').toLowerCase() === opt.toLowerCase() ? ' selected' : ''}>${escapeHtml(opt)}</option>`).join('')}
+    </select>
+    <textarea data-fld="description" class="textarea" placeholder="Deskripsi sesi (sub-topik + output/artefak)">${escapeHtml(m.description || '')}</textarea>
+    <button type="button" class="btn-icon material-remove" title="Hapus baris">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  row.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('input', () => { saveProposalState(); updateMaterialsCount(); }));
+  row.querySelector('.material-remove').addEventListener('click', () => { row.remove(); saveProposalState(); updateMaterialsCount(); });
+  return row;
+}
+
+function updateMaterialsCount() {
+  const c = document.querySelectorAll('#materialsList .material-row').length;
+  const el = document.getElementById('materialsCount');
+  if (el) el.textContent = `${c} sesi`;
+}
+
+// Default starter rows
+function seedMaterialsIfEmpty() {
+  const list = document.getElementById('materialsList');
+  if (!list || list.children.length > 0) return;
+  const seed = [
+    { no: 1, title: 'Pengantar & fondasi', duration: '1 jam', method: 'Ceramah', description: 'Tujuan, landasan konseptual, dan kaitan dengan masalah bisnis klien saat ini.' },
+    { no: 2, title: 'Topik inti 1', duration: '2 jam', method: 'Diskusi', description: 'Diskusi interaktif, tanya jawab, dan latihan singkat.' },
+    { no: 3, title: 'Studi kasus', duration: '2 jam', method: 'Studi Kasus', description: 'Studi kasus relevan industri klien dan rekomendasi tindakan.' },
+    { no: 4, title: 'Latihan terapan', duration: '2 jam', method: 'Latihan/Praktik', description: 'Peserta latihan langsung menggunakan tools/framework yang dipelajari.' },
+    { no: 5, title: 'Uji kompetensi & rencana aksi', duration: '1 jam', method: 'Workshop', description: 'Evaluasi individu serta rencana implementasi 30-60-90 hari.' }
+  ];
+  renderMaterialsRows(seed);
 }
 
 // Auto-save Client Brief inputs
@@ -534,6 +608,82 @@ loadAiSettings();
 document.getElementById('toggleKey')?.addEventListener('click', () => {
   const input = document.getElementById('aiApiKey');
   input.type = input.type === 'password' ? 'text' : 'password';
+});
+
+// ---------- Materials UI bindings ----------
+document.getElementById('addMaterialRowBtn')?.addEventListener('click', () => {
+  const list = document.getElementById('materialsList');
+  if (!list) return;
+  list.appendChild(buildMaterialRow());
+  saveProposalState(); updateMaterialsCount();
+});
+
+document.getElementById('generateMaterialsBtn')?.addEventListener('click', async () => {
+  const state = Store.get('pg_proposal', {});
+  if (!state.companyName || !state.proposalTitle) {
+    toast('Lengkapi Info Penting dulu (Step 2)', 'error'); return;
+  }
+  const ai = Store.get('pg_ai', {});
+  if (!ai.apiKey) { toast('Atur API Key dulu di Pengaturan AI', 'error'); showStep('settings'); return; }
+  const btn = document.getElementById('generateMaterialsBtn');
+  const original = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span>⏳ Riset...</span>';
+  try {
+    const insightsPrompt = `Tolong analisis konteks pelatihan ini lalu produksi JSON array "materials" berisi 6-8 sesi.
+
+Konteks:
+- Industri klien: ${state.clientIndustry || '-'}
+- Ukuran klien: ${state.companySize || '-'}
+- Pain points: ${state.topPainPoints || '-'}
+- Target bisnis: ${state.businessGoals || '-'}
+- Judul pelatihan: ${state.proposalTitle}
+- Penyelenggara: ${state.organizerName || '-'}
+- Unit kompetensi: ${state.competencyUnit || '-'}
+
+Setiap sesi harus: { "title", "duration", "method", "description" }. method harus salah satu: ${METHOD_CHOICES.join(', ')}. duration realistis (1-3 jam). description sebutkan sub-topik + output/artefak yang peserta bawa pulang. Industri klien harus terasa di deskripsi.
+
+Output HANYA JSON valid, tidak ada teks lain.`;
+
+    let parsed = null;
+    try {
+      const res = await callAi(ai, [
+        { role: 'system', content: 'Anda adalah perancang kurikulum senior. Output HANYA JSON valid.' },
+        { role: 'user', content: insightsPrompt }
+      ], { temperature: 0.5, response_format: ai.provider === 'openai' ? { type: 'json_object' } : undefined });
+      const m = String(res).match(/\{"materials"\s*:\s*\[[\s\S]*\]\}/) || String(res).match(/\{[\s\S]*\}/);
+      parsed = m ? JSON.parse(m[0]) : null;
+    } catch (_) {}
+
+    // Fallback: try direct array
+    if (!parsed || !Array.isArray(parsed.materials)) {
+      try {
+        const res2 = await callAi(ai, [
+          { role: 'system', content: 'Anda adalah perancang kurikulum senior. Output HANYA JSON array valid (dimulai dengan [, diakhiri ]), tidak ada teks lain. Tiap item: {title, duration, method, description}.' },
+          { role: 'user', content: insightsPrompt }
+        ], { temperature: 0.5 });
+        const m = String(res2).match(/\[[\s\S]*\]/);
+        parsed = m ? { materials: JSON.parse(m[0]) } : null;
+      } catch (e) {
+        throw new Error('AI response tidak bisa diparse. Coba lagi.');
+      }
+    }
+    if (!Array.isArray(parsed.materials) || parsed.materials.length === 0) throw new Error('Tidak ada sesi yang dihasilkan.');
+
+    const normalized = parsed.materials.slice(0, 10).map((m, i) => ({
+      no: i + 1,
+      title: String(m.title || `Sesi ${i + 1}`),
+      duration: String(m.duration || '2 jam'),
+      method: METHOD_CHOICES.find(opt => (m.method || '').toLowerCase().includes(opt.toLowerCase())) || 'Ceramah',
+      description: String(m.description || '')
+    }));
+    renderMaterialsRows(normalized);
+    saveProposalState();
+    toast(`${normalized.length} sesi materi dihasilkan`, 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = original;
+  }
 });
 
 document.getElementById('saveAiBtn').addEventListener('click', () => {
@@ -787,7 +937,8 @@ function getProposalData() {
       audience: s.audience || '',
       requirements: s.requirements || '',
       closing: s.closing || ''
-    }
+    },
+    materials: Array.isArray(s.materials) ? s.materials : []
   };
 }
 
@@ -817,6 +968,51 @@ function parseBullets(text) {
 }
 function pad2(n) { return String(n).padStart(2, '0'); }
 
+// ---------- Materials DOCX block ----------
+function buildMaterialsDocx(data) {
+  const mats = Array.isArray(data.materials) ? data.materials : [];
+  if (mats.length === 0) return [];
+  const rows = [new TableRow({
+    tableHeader: true,
+    children: ['No','Topik & Deskripsi','Durasi','Metode'].map(label =>
+      new TableCell({
+        shading: { type: ShadingType.CLEAR, fill: COL_PRIMARY, color: 'auto' },
+        children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, color: 'FFFFFF', size: 22 })] })]
+      })
+    )
+  }),
+  ...mats.map((m, i) => new TableRow({
+    children: [
+      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: String(i + 1), bold: true, size: 22 })] })] }),
+      new TableCell({ children: [
+        new Paragraph({ children: [new TextRun({ text: m.title || `Sesi ${i+1}`, bold: true, size: 22 })], spacing: { after: 60 } }),
+        ...(m.description ? [new Paragraph({ children: [new TextRun({ text: m.description, size: 20, color: '475569' })] })] : [])
+      ]}),
+      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: m.duration || '—', size: 22 })] })] }),
+      new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: m.method || 'Ceramah', size: 22 })] })] })
+    ]
+  }))];
+
+  return [
+    new Paragraph({ children: [new TextRun({ text: '02A', bold: true, size: 64, color: COL_PRIMARY, font: fonts.heading })], spacing: { after: 100 } }),
+    new Paragraph({
+      children: [new TextRun({ text: 'Materi Pelatihan', bold: true, size: 32, color: '0F172A', font: fonts.heading })],
+      heading: HeadingLevel.HEADING_2,
+      spacing: { after: 200 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: COL_PRIMARY, space: 1 } }
+    }),
+    new Paragraph({
+      children: [new TextRun({
+        text: `${mats.length} sesi yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik ${data.company || 'klien'} agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.`,
+        size: 22
+      })],
+      spacing: { after: 200 }
+    }),
+    new Table({ rows, width: { size: 100, type: WidthType.PERCENTAGE } }),
+    new Paragraph({ text: '', spacing: { after: 360 } })
+  ];
+}
+
 // ---------- Proposal HTML Renderer ----------
 function renderProposalHTML(data, opts = {}) {
   const tpl = data.template;
@@ -824,7 +1020,7 @@ function renderProposalHTML(data, opts = {}) {
   const dateRange = fmtDateRange(data.startDate, data.endDate);
   const facilityIcon = (i) => ['🎓','📚','🍽️','🏨','💻','💬','🏆','📜','✈️','🎯'][i % 10];
 
-  const sectionsHTML = [
+  const sectionBlocks = [
     {num:1, title:'Latar Belakang', body: nl2br(data.body.background || '—')},
     {num:2, title:'Deskripsi Pelatihan', body: nl2br(data.body.description || '—')},
     {num:3, title:'Tujuan', body: nl2br(data.body.objectives || '—'), list: parseBullets(data.body.objectives)},
@@ -843,7 +1039,14 @@ function renderProposalHTML(data, opts = {}) {
         }
       </div>
     </section>
-  `).join('');
+  `);
+
+  // Insert Materials block right after Deskripsi (2nd item = index 1)
+  const materialsBlockHTML = buildMaterialsSectionHTML(data);
+  if (materialsBlockHTML) {
+    sectionBlocks.splice(2, 0, materialsBlockHTML); // insert after Deskripsi (index 1)
+  }
+  const sectionsHTML = sectionBlocks.join('');
 
   // Schedule table (6) — dynamic rows based on start/end dates
   const scheduleRows = buildScheduleDays(data.startDate, data.endDate);
@@ -981,6 +1184,7 @@ function renderProposalHTML(data, opts = {}) {
               ['ES','Ringkasan Eksekutif'],
               ['01','Latar Belakang'],
               ['02','Deskripsi Pelatihan'],
+              ['02A','Materi Pelatihan'],
               ['03','Tujuan'],
               ['04','Peserta'],
               ['05','Persyaratan Peserta'],
@@ -1183,6 +1387,49 @@ function buildScheduleDays(startDate, endDate) {
     out.push(`Hari ${i + 1}${labels[i] ? ' — ' + labels[i] : ''}`);
   }
   return out;
+}
+
+// Materials section — appears in the proposal after Deskripsi (before Persyaratan)
+function buildMaterialsSectionHTML(data) {
+  const mats = Array.isArray(data.materials) ? data.materials : [];
+  if (mats.length === 0) return '';
+  const rows = mats.map((m, i) => `
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">${i + 1}</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">${escapeHtml(m.title || `Sesi ${i + 1}`)}</div>
+        ${m.description ? `<div class="mat-desc">${escapeHtml(m.description)}</div>` : ''}
+      </td>
+      <td class="mat-dur"><span class="mat-pill">${escapeHtml(m.duration || '—')}</span></td>
+      <td class="mat-method"><span class="mat-method-tag">${escapeHtml(m.method || 'Ceramah')}</span></td>
+    </tr>
+  `).join('');
+  const totalHours = mats.length; // rough estimate
+  return `
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>${mats.length} sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>${escapeHtml(data.company || 'klien')}</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">${mats.length}</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">${new Set(mats.map(m => m.method || 'Ceramah')).size}</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± ${totalHours * 2} jam</span></div>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 document.getElementById('exportPdfBtn').addEventListener('click', () => {
@@ -1519,6 +1766,7 @@ function buildProposalDocx(data) {
     'ES Ringkasan Eksekutif',
     '01 Latar Belakang',
     '02 Deskripsi Pelatihan',
+    '02A Materi Pelatihan',
     '03 Tujuan',
     '04 Peserta',
     '05 Persyaratan Peserta',
@@ -1764,12 +2012,12 @@ function buildProposalDocx(data) {
     // Sections Page
     ...sectionContent('01', 'Latar Belakang', data.body.background),
     ...sectionContent('02', 'Deskripsi Pelatihan', data.body.description),
+    ...buildMaterialsDocx(data),
     ...sectionContent('03', 'Tujuan', data.body.objectives, parseBullets(data.body.objectives)),
     ...sectionContent('04', 'Peserta', data.body.audience),
     ...sectionContent('05', 'Persyaratan Peserta', data.body.requirements, parseBullets(data.body.requirements), true),
     ...whyUsDocx,
     ...roiDocx,
-    ...sectionContent('05', 'Persyaratan Peserta', data.body.requirements, parseBullets(data.body.requirements), true),
 
     // Jadwal (6)
     new Paragraph({

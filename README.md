@@ -31,6 +31,7 @@ Generate Proposal kini menghasilkan dokumen **multi-halaman** yang siap dikirim 
 | **Sections (12)** | Latar Belakang → Penutup, masing-masing dengan **nomor besar berwarna gradient** |
 | **Mengapa Memilih Kami** *(NEW)* | 5 kartu pembeda dengan ikon |
 | **Dampak & ROI** *(NEW)* | 5 hasil terukur + bukti sosial, format payback 3-6 bulan |
+| **Materi Pelatihan** *(NEW)* | Tabel kurikulum: no, topik + deskripsi, durasi, metode. Bisa generate via AI atau isi manual per-baris. |
 | **Jadwal Pelaksanaan** | Tabel terstruktur per hari, **jumlah baris otomatis mengikuti rentang tanggal** |
 | **Investasi** | Tabel harga dengan zebra rows |
 | **Fasilitas** | Card grid dengan icon emoji |
@@ -53,11 +54,17 @@ Tombol tersedia di tiap step AI:
 
 Step opsional sebelum Generate dengan AI. Isi industri klien, ukuran, pain points, target bisnis, range budget, timeline keputusan, dan pengambil keputusan → LLM menghasilkan copy yang spesifik industri Anda. Kosongkan jika tidak tahu — AI otomatis menulis placeholder yang bisa diedit.
 
-## 🎨 3 Template Design
+## 🎨 7 Template Design
 
 - **Classic** — Navy `#1E3A5F` + serif heading, kesan korporat
 - **Modern** — Gradient ungu + accent warna, visual bold
 - **Minimal** — Abu-abu soft + spacing longgar + dashed border
+- **Executive** *(NEW)* — Navy + gold serif, untuk C-level / board
+- **Bold** *(NEW)* — Orange-hitam geometric, untuk pitch growth / agresif
+- **Elegant** *(NEW)* — Burgundy + cream serif italic, refined / boutique
+- **Corporate** *(NEW)* — Slate-biru konservatif, enterprise
+
+Setiap template punya treatment berbeda untuk: cover, Exec Summary, Why-Us grid, ROI grid, Materi table, closing CTA, TOC, schedule.
 
 ## 📥 Export
 
@@ -92,19 +99,20 @@ Aplikasi memakai **Firebase Authentication** untuk login production-grade — pa
 - `?demo=1&sample=1` → demo + sample data + auto-generate preview
 - Tanpa parameter → muncul auth screen, wajib login via Email/Google
 
-1. **Pilih Model Design** — Classic / Modern / Minimal
+1. **Pilih Model Design** — 7 pilihan template (Classic / Modern / Minimal / Executive / Bold / Elegant / Corporate)
 2. **Info Penting** — Nama Perusahaan, Penyelenggara, Judul, Unit Kompetensi (opsional), CTA
 3. **Brief Klien** *(NEW)* — Industri, ukuran, pain points, target bisnis, budget range, timeline keputusan, decision-makers (opsional; semakin lengkap semakin tajam output AI)
 4. **Latar Belakang** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang + panel Riset AI
 5. **Deskripsi** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
 6. **Tujuan** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
 7. **Peserta** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
-8. **Persyaratan** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
-9. **Tanggal & Venue** — Input manual
-10. **Biaya** — Input manual
-11. **Fasilitas** — Pilih dari checkbox
-12. **Penutup** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang (menghasilkan CTA assumptive + deadline + kontak + sign-off)
-13. **Pengaturan AI** — Atur provider, model, API key, base URL, lalu generate proposal + export PDF/DOCX
+8. **Materi Pelatihan** *(NEW)* — Dynamic list (Sesi # → Topik → Durasi → Metode → Deskripsi). Tombol "Suggest by AI" generate 6-8 baris otomatis; tombol "+ Tambah Baris" manual.
+9. **Persyaratan** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang
+10. **Tanggal & Venue** — Input manual
+11. **Biaya** — Input manual
+12. **Fasilitas** — Pilih dari checkbox
+13. **Penutup** — ✨ Generate / 🔄 Ulangi / 🔁 Riset ulang (menghasilkan CTA assumptive + deadline + kontak + sign-off)
+14. **Pengaturan AI** — Atur provider, model, API key, base URL, lalu generate proposal + export PDF/DOCX
 
 ## ⚙️ Pengaturan AI
 

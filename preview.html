@@ -1,184 +1,7 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sample Proposal (new)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<style>
-
-    .proposal { font-family: 'Inter', sans-serif; color: #0f172a; }
-    .proposal * { box-sizing: border-box; }
-
-    /* Cover Page */
-    .cover-page {
-      position: relative;
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-    .cover-page.tpl-modern { background: linear-gradient(135deg, #6366f1 0%, #a855f7 60%, #ec4899 100%); }
-    .cover-page.tpl-minimal { background: #fafafa; color: #0f172a; }
-    .cover-page.tpl-minimal .cover-tag { color: #475569; }
-    .cover-page.tpl-minimal .cover-title { color: #0f172a; }
-    .cover-page.tpl-minimal .cover-sub { color: #475569; }
-    .cover-page.tpl-minimal .cover-meta-row { border-bottom-color: rgba(15,23,42,0.08); }
-    .cover-page.tpl-minimal .cover-meta-row span { color: #64748b; }
-    .cover-decor { position: absolute; inset: 0; pointer-events: none; }
-    .cover-block { position: absolute; border-radius: 50%; }
-    .cover-page:not(.tpl-minimal) .cover-block { background: rgba(255,255,255,0.08); }
-    .cover-page.tpl-minimal .cover-block { background: #6366f1; opacity: 0.12; }
-    .block-1 { width: 400px; height: 400px; top: -120px; right: -100px; }
-    .block-2 { width: 280px; height: 280px; bottom: -80px; left: -60px; }
-    .block-3 { width: 200px; height: 200px; top: 35%; left: 50%; }
-    .cover-content { position: relative; z-index: 2; max-width: 720px; }
-    .cover-tag { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; opacity: 0.7; margin-bottom: 18px; }
-    .cover-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 56px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 18px; }
-    .cover-page.tpl-classic .cover-title { font-family: 'Plus Jakarta Sans', serif; letter-spacing: -0.02em; }
-    .cover-page.tpl-minimal .cover-title { font-weight: 300; }
-    .cover-sub { font-size: 16px; opacity: 0.85; margin-bottom: 32px; line-height: 1.55; max-width: 540px; }
-    .cover-meta { display: grid; gap: 6px 24px; grid-template-columns: auto 1fr; margin-bottom: 28px; }
-    .cover-meta-row {
-      display: contents;
-    }
-    .cover-meta-row span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.6; padding-top: 8px; }
-    .cover-meta-row strong { font-weight: 600; font-size: 14px; padding-top: 6px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.12); }
-    .cover-page.tpl-minimal .cover-meta { display: block; }
-    .cover-page.tpl-minimal .cover-meta-row { display: grid; grid-template-columns: 130px 1fr; padding: 10px 0; border-bottom: 1px solid rgba(15,23,42,0.08); }
-    .cover-competency { display: inline-block; padding: 10px 18px; border-radius: 100px; background: rgba(255,255,255,0.12); font-size: 13px; font-weight: 500; }
-    .cover-page.tpl-minimal .cover-competency { background: #f1f5f9; color: #475569; }
-
-    /* Page header (TOC, INFO) */
-    .page-header { margin-bottom: 28px; padding-bottom: 18px; border-bottom: 2px solid #0f172a; }
-    .proposal.tpl-modern .page-header { border-color: #6366f1; }
-    .proposal.tpl-minimal .page-header { border-color: #cbd5e1; border-bottom-style: dashed; }
-    .page-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
-    .proposal.tpl-modern .page-eyebrow { color: #6366f1; }
-    .page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
-    .proposal.tpl-minimal .page-title { font-weight: 600; }
-
-    /* TOC */
-    .toc-list { list-style: none; padding: 0; margin: 24px 0; }
-    .toc-item { display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid #e2e8f0; }
-    .toc-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 700; color: #6366f1; }
-    .proposal.tpl-classic .toc-num { color: #0f172a; }
-    .proposal.tpl-minimal .toc-num { color: #64748b; font-weight: 600; }
-    .toc-label { font-size: 16px; font-weight: 600; color: #0f172a; }
-    .toc-dots {
-      height: 1px;
-      background-image: linear-gradient(to right, #cbd5e1 50%, transparent 50%);
-      background-size: 6px 1px;
-    }
-    .toc-page { font-weight: 700; color: #64748b; font-size: 14px; text-align: right; }
-
-    /* Info grid */
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
-    .info-card { padding: 16px 18px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
-    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6366f1; margin-bottom: 6px; }
-    .proposal.tpl-classic .info-label { color: #1e3a5f; }
-    .proposal.tpl-minimal .info-label { color: #64748b; }
-    .info-value { font-size: 15px; font-weight: 600; color: #0f172a; line-height: 1.5; }
-    .info-card-wide { grid-column: 1 / -1; }
-
-    /* Section blocks */
-    .sections-wrap { display: flex; flex-direction: column; gap: 36px; }
-    .section-block { display: grid; grid-template-columns: 80px 1fr; gap: 20px; }
-    .section-num {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 56px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-      color: #6366f1;
-      background: linear-gradient(180deg, #6366f1 0%, #a855f7 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .proposal.tpl-classic .section-num { background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .proposal.tpl-minimal .section-num { background: none; -webkit-text-fill-color: #cbd5e1; color: #cbd5e1; }
-    .section-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin: 0 0 12px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #6366f1;
-      color: #0f172a;
-    }
-    .proposal.tpl-classic .section-title { border-bottom-color: #1e3a5f; }
-    .proposal.tpl-minimal .section-title { border-bottom-style: dashed; border-bottom-color: #cbd5e1; font-weight: 600; }
-    .section-body { font-size: 14px; line-height: 1.75; color: #334155; margin: 0 0 12px; }
-    .section-list { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-direction: column; gap: 8px; }
-    .section-list li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: flex-start; line-height: 1.6; color: #334155; font-size: 14px; }
-    .section-list .bullet {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      background: #6366f1; margin-top: 8px;
-    }
-    .proposal.tpl-classic .section-list .bullet { background: #1e3a5f; }
-    .section-list.checklist li .check-mark {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: #10b981; color: white;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-    }
-
-    /* Tables */
-    .proposal-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
-    .proposal-table th, .proposal-table td {
-      padding: 12px 14px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .proposal-table th {
-      background: #f1f5f9;
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #475569;
-    }
-    .proposal.tpl-modern .proposal-table th { background: #eef2ff; color: #4338ca; }
-    .proposal.tpl-classic .proposal-table th { background: #1e3a5f; color: white; }
-    .proposal.tpl-minimal .proposal-table th { background: transparent; border-bottom: 2px solid #0f172a; color: #0f172a; }
-    .pricing-table tbody tr:nth-child(even) td { background: #f8fafc; }
-
-    /* Facility grid */
-    .facility-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-    .facility-card-doc {
-      display: flex; gap: 12px; align-items: center;
-      padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 10px;
-      background: linear-gradient(135deg, #fafbff 0%, #f8fafc 100%);
-    }
-    .proposal.tpl-modern .facility-card-doc { background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 100%); }
-    .facility-doc-icon { font-size: 22px; }
-    .facility-doc-label { font-size: 13px; font-weight: 600; color: #0f172a; line-height: 1.4; }
-
-    /* CTA box */
-    .cta-box {
-      margin-top: 16px;
-      padding: 18px 22px;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-      color: white;
-      border-radius: 12px;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    .proposal.tpl-classic .cta-box { background: #1e3a5f; }
-    .proposal.tpl-minimal .cta-box { background: #0f172a; }
-
-    /* Footer */
-    .proposal-footer {
-      margin-top: 36px;
-      padding-top: 16px;
-      border-top: 1px solid #e2e8f0;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 11px; color: #64748b; letter-spacing: 0.04em;
-    }
-    .proposal-footer-num { font-weight: 700; }
-  
-body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-serif; }
-.proposal { max-width: 794px; margin: 0 auto; background: #fff; box-shadow: 0 18px 40px rgba(0,0,0,0.08); }
-</style></head><body>
-    <article class="proposal tpl-modern">
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sample Proposal (materi + 7 templates)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Source+Serif+Pro:wght@400;600&family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<style>body{font-family:Inter,sans-serif;background:#f5f5f7;margin:0;padding:32px} .proposal{max-width:794px;margin:24px auto;background:#fff;box-shadow:0 18px 40px rgba(0,0,0,0.08)} .tpl-label{display:block;text-align:center;font-weight:700;letter-spacing:0.2em;font-size:11px;color:#94a3b8;padding:16px;text-transform:uppercase}</style></head><body><div class="tpl-label">CLASSIC TEMPLATE</div>
+    <article class="proposal tpl-classic">
       <!-- COVER PAGE -->
       <section class="cover-page">
         <div class="cover-decor">
@@ -213,7 +36,7 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
       <div class="exec-grid">
         <div class="exec-card exec-problem">
           <div class="exec-card-tag">Masalah</div>
-          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
         </div>
         <div class="exec-card exec-solution">
           <div class="exec-card-tag">Solusi</div>
@@ -269,6 +92,13 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
               <li class="toc-item">
                 <span class="toc-num">02</span>
                 <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
                 <span class="toc-dots"></span>
                 <span class="toc-page"></span>
               </li>
@@ -362,7 +192,7 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
       <div class="section-num">01</div>
       <div class="section-content">
         <h2 class="section-title">Latar Belakang</h2>
-        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional dan belum mengoptimalkan kanal digital. Pelatihan ini menjadi kebutuhan strategis.</p>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
       </div>
     </section>
   
@@ -370,7 +200,111 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
       <div class="section-num">02</div>
       <div class="section-content">
         <h2 class="section-title">Deskripsi Pelatihan</h2>
-        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads. Setiap sesi dilengkapi studi kasus nyata dan latihan praktis.</p>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
       </div>
     </section>
   
@@ -503,6 +437,11 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
                 <div class="facility-doc-label">Makan siang &amp; coffee break</div>
               </div>
             
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
           </div>
         
       </div>
@@ -517,8 +456,2906 @@ body { background: #f5f5f7; margin: 0; padding: 32px; font-family: Inter, sans-s
         <div class="closing-cta-block">
           <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
           <div class="closing-cta-meta">
-            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">12 September 2026</span></div>
-            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">12 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">MODERN TEMPLATE</div>
+    <article class="proposal tpl-modern">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">MINIMAL TEMPLATE</div>
+    <article class="proposal tpl-minimal">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">EXECUTIVE TEMPLATE</div>
+    <article class="proposal tpl-executive">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">BOLD TEMPLATE</div>
+    <article class="proposal tpl-bold">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">ELEGANT TEMPLATE</div>
+    <article class="proposal tpl-elegant">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
+          </div>
+          
+    <div class="closing-contacts">
+      <div class="closing-contact"><div class="cc-label">Penjualan</div><div class="cc-name">Lembaga Pelatihan Nusantara</div><div class="cc-info">WA: 08XX-XXXX-XXXX • email@vendor.co.id</div></div>
+      <div class="closing-contact"><div class="cc-label">Administrasi</div><div class="cc-name">Tim Admin Proyek</div><div class="cc-info">WA: 08XX-XXXX-XXXX • admin@vendor.co.id</div></div>
+    </div>
+  
+          <div class="closing-signoff">
+            <div class="sig-label">Hormat kami,</div>
+            <div class="sig-space"></div>
+            <div class="sig-name"><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="sig-role">Account Executive • Lembaga Pelatihan Nusantara</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+        </div>
+        <div class="proposal-footer">
+          <span class="proposal-footer-text">Lembaga Pelatihan Nusantara • PT Maju Bersama Sentosa</span>
+          <span class="proposal-footer-num">—    —</span>
+        </div>
+      </section>
+    </article>
+  
+<div class="tpl-label">CORPORATE TEMPLATE</div>
+    <article class="proposal tpl-corporate">
+      <!-- COVER PAGE -->
+      <section class="cover-page">
+        <div class="cover-decor">
+          <div class="cover-block block-1"></div>
+          <div class="cover-block block-2"></div>
+          <div class="cover-block block-3"></div>
+        </div>
+        <div class="cover-content">
+          <div class="cover-tag">PROPOSAL PELATIHAN</div>
+          <h1 class="cover-title">Pelatihan Digital Marketing untuk UMKM</h1>
+          <p class="cover-sub">Disusun untuk peningkatan kapasitas & pengembangan sumber daya manusia</p>
+          <div class="cover-meta">
+            <div class="cover-meta-row"><span>Disusun Oleh</span><strong>Lembaga Pelatihan Nusantara</strong></div>
+            <div class="cover-meta-row"><span>Untuk</span><strong>PT Maju Bersama Sentosa</strong></div>
+            <div class="cover-meta-row"><span>Tanggal</span><strong>15-17 September 2026</strong></div>
+            <div class="cover-meta-row"><span>Tahun</span><strong>2026</strong></div>
+          </div>
+          <div class="cover-competency">Unit Kompetensi: M.731000.001.01</div>
+        </div>
+      </section>
+
+      <!-- EXECUTIVE SUMMARY (NEW — right after cover) -->
+      
+    <section class="proposal-page exec-summary-page">
+      <div class="page-header">
+        <div class="page-eyebrow">Ringkasan Eksekutif</div>
+        <h2 class="page-title">Satu Halaman untuk Pengambil Keputusan</h2>
+      </div>
+      <div class="exec-headline">Pelatihan Digital Marketing untuk UMKM</div>
+      <p class="exec-meta">Disusun untuk <strong>PT Maju Bersama Sentosa</strong> • oleh <strong>Lembaga Pelatihan Nusantara</strong> • 15-17 September 2026</p>
+
+      <div class="exec-grid">
+        <div class="exec-card exec-problem">
+          <div class="exec-card-tag">Masalah</div>
+          <div class="exec-card-body">Lead time produksi tinggi, reporting manual di Excel, ROI digital marketing sulit diukur</div>
+        </div>
+        <div class="exec-card exec-solution">
+          <div class="exec-card-tag">Solusi</div>
+          <div class="exec-card-body">Pelatihan Digital Marketing untuk UMKM — intervensi pelatihan terstruktur dengan pendekatan "studi kasus industri".</div>
+        </div>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Mengapa Kami (3 Pembeda)</div>
+        <ul class="exec-diffs"><li>Tenaga pengajar tersertifikasi</li><li>Metodologi berbasis studi kasus industri Anda</li><li>Garansi pascapelatihan &amp; konsultasi</li></ul>
+      </div>
+
+      <div class="exec-section">
+        <div class="exec-section-title">Hasil Terukur yang Diharapkan</div>
+        <ul class="exec-outcomes"><li>Peserta memahami kerangka kerja</li><li>Peserta mampu mengaplikasikan di pekerjaan nyata</li><li>Perusahaan memiliki blueprint implementasi</li></ul>
+      </div>
+
+      <div class="exec-bottom">
+        <div class="exec-investment">
+          <div class="exec-investment-label">Investasi</div>
+          <div class="exec-investment-value">Rp 2.500.000<span class="exec-investment-unit">/peserta</span></div>
+        </div>
+        <div class="exec-next">
+          <div class="exec-next-label">Langkah Selanjutnya</div>
+          <div class="exec-next-body">Konfirmasi dari <strong>HR Director &amp; CFO PT Maju Bersama</strong> via WhatsApp atau email di halaman Penutup.</div>
+        </div>
+      </div>
+    </section>
+  
+
+      <!-- TABLE OF CONTENTS PAGE -->
+      <section class="proposal-page toc-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Daftar Isi</div>
+          <h2 class="page-title">Table of Contents</h2>
+        </div>
+        <ul class="toc-list">
+          
+              <li class="toc-item">
+                <span class="toc-num">ES</span>
+                <span class="toc-label">Ringkasan Eksekutif</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">01</span>
+                <span class="toc-label">Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02</span>
+                <span class="toc-label">Deskripsi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">02A</span>
+                <span class="toc-label">Materi Pelatihan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">03</span>
+                <span class="toc-label">Tujuan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">04</span>
+                <span class="toc-label">Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05</span>
+                <span class="toc-label">Persyaratan Peserta</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05A</span>
+                <span class="toc-label">Mengapa Memilih Kami</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">05B</span>
+                <span class="toc-label">Dampak &amp; ROI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">06</span>
+                <span class="toc-label">Jadwal Pelaksanaan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">07</span>
+                <span class="toc-label">Investasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">08</span>
+                <span class="toc-label">Fasilitas</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+              <li class="toc-item">
+                <span class="toc-num">09</span>
+                <span class="toc-label">Penutup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page"></span>
+              </li>
+            
+        </ul>
+      </section>
+
+      <!-- HEADER / INFO PAGE -->
+      <section class="proposal-page info-page">
+        <div class="page-header">
+          <div class="page-eyebrow">Informasi Proposal</div>
+          <h2 class="page-title">Pelatihan Digital Marketing untuk UMKM</h2>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-label">Untuk Perusahaan</div><div class="info-value">PT Maju Bersama Sentosa</div></div>
+          <div class="info-card"><div class="info-label">Penyelenggara</div><div class="info-value">Lembaga Pelatihan Nusantara</div></div>
+          <div class="info-card"><div class="info-label">Tanggal</div><div class="info-value">15-17 September 2026</div></div>
+          <div class="info-card"><div class="info-label">Venue</div><div class="info-value">Hotel Grand Hyatt Jakarta</div></div>
+          <div class="info-card info-card-wide"><div class="info-label">Unit Kompetensi</div><div class="info-value">M.731000.001.01</div></div>
+        </div>
+      </section>
+
+      <!-- SECTIONS PAGE (could be multiple) -->
+      <section class="proposal-page sections-page">
+        <div class="sections-wrap">
+          
+    <section class="section-block">
+      <div class="section-num">01</div>
+      <div class="section-content">
+        <h2 class="section-title">Latar Belakang</h2>
+        <p class="section-body">Di era transformasi digital, banyak UMKM masih mengandalkan metode konvensional.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">02</div>
+      <div class="section-content">
+        <h2 class="section-title">Deskripsi Pelatihan</h2>
+        <p class="section-body">Pelatihan 3 hari mencakup SEO, social media, content marketing, dan Paid Ads.</p>
+      </div>
+    </section>
+  
+    <section class="section-block materials-block">
+      <div class="section-num">03A</div>
+      <div class="section-content">
+        <h2 class="section-title">Materi Pelatihan</h2>
+        <p class="section-body">Kurikulum <strong>8 sesi</strong> yang membahas aspek fundamental hingga implementasi — disusun dari pendalaman masalah spesifik <strong>PT Maju Bersama Sentosa</strong> agar peserta langsung bisa mempraktikkan di unit kerja masing-masing.</p>
+        <table class="proposal-table materials-table">
+          <thead>
+            <tr>
+              <th style="width:6%">No</th>
+              <th>Topik & Deskripsi Sesi</th>
+              <th style="width:14%">Durasi</th>
+              <th style="width:16%">Metode</th>
+            </tr>
+          </thead>
+          <tbody>
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">1</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Pengantar digital marketing &amp; mapping pain points peserta</div>
+        <div class="mat-desc">Lanskap digital marketing 2026 dan audit channel klien. Output: lembar kerja audit.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Ceramah</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">2</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Riset audiens &amp; journey mapping</div>
+        <div class="mat-desc">Metode persona development dengan template konkret.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">3</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">SEO on-page &amp; off-page fundamentals</div>
+        <div class="mat-desc">Studi kasus audiens FMCG, audit SEO konten.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">4</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Paid Ads: Meta &amp; Google Ads arsitektur</div>
+        <div class="mat-desc">Setup campaign dengan parameter klien.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Latihan/Praktik</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">5</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Content marketing &amp; storytelling</div>
+        <div class="mat-desc">Framework storytelling untuk industri FMCG.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Diskusi</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">6</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Studi kasus integrasi omnichannel</div>
+        <div class="mat-desc">Diskusi 2 studi kasus sukses &amp; gagal.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Studi Kasus</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">7</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Latihan presentasi &amp; feedback loop</div>
+        <div class="mat-desc">Setiap kelompok mempresentasikan rencana kampanye.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">2 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Workshop</span></td>
+    </tr>
+  
+    <tr class="material-row-tr">
+      <td class="mat-no"><div class="mat-no-badge">8</div></td>
+      <td class="mat-title">
+        <div class="mat-title-text">Rencana implementasi 30-60-90 hari</div>
+        <div class="mat-desc">Coaching individu dengan KPI jelas.</div>
+      </td>
+      <td class="mat-dur"><span class="mat-pill">1 jam</span></td>
+      <td class="mat-method"><span class="mat-method-tag">Coaching</span></td>
+    </tr>
+  </tbody>
+        </table>
+        <div class="materials-totals">
+          <div class="materials-total-item"><span class="mti-label">Total Sesi</span><span class="mti-value">8</span></div>
+          <div class="materials-total-item"><span class="mti-label">Metode Campuran</span><span class="mti-value">6</span></div>
+          <div class="materials-total-item"><span class="mti-label">Estimasi Durasi</span><span class="mti-value">± 16 jam</span></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">03</div>
+      <div class="section-content">
+        <h2 class="section-title">Tujuan</h2>
+        <ul class="section-list"><li><span class="bullet"></span><span>Memahami digital marketing holistik</span></li><li><span class="bullet"></span><span>Mampu menyusun strategi digital marketing terukur</span></li><li><span class="bullet"></span><span>Mampu mengelola kampanye SEO dan SEM</span></li></ul>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">04</div>
+      <div class="section-content">
+        <h2 class="section-title">Peserta</h2>
+        <p class="section-body">Pemilik usaha, marketing manager, dan staf pemasaran.</p>
+      </div>
+    </section>
+  
+    <section class="section-block">
+      <div class="section-num">05</div>
+      <div class="section-content">
+        <h2 class="section-title">Persyaratan Peserta</h2>
+        <ul class="section-list checklist"><li><span class="check-mark">✓</span><span>Membawa laptop</span></li><li><span class="check-mark">✓</span><span>Pengetahuan dasar media sosial</span></li><li><span class="check-mark">✓</span><span>Hadir seluruh sesi</span></li></ul>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05A</div>
+      <div class="section-content">
+        <h2 class="section-title">Mengapa Memilih Kami</h2>
+        <p class="section-body">Lima alasan Lembaga Pelatihan Nusantara adalah mitra yang tepat untuk kebutuhan PT Maju Bersama Sentosa:</p>
+        <div class="whyus-grid">
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🏅</div>
+              <div class="whyus-text">Tenaga pengajar tersertifikasi BNSP</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🧪</div>
+              <div class="whyus-text">Metodologi blended (live + e-learning)</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📚</div>
+              <div class="whyus-text">Studi kasus dari industri klien</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">🛡️</div>
+              <div class="whyus-text">Garansi pascapelatihan 30 hari</div>
+            </div>
+          
+            <div class="whyus-card">
+              <div class="whyus-icon">📊</div>
+              <div class="whyus-text">Sertifikat &amp; laporan evaluasi</div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">05B</div>
+      <div class="section-content">
+        <h2 class="section-title">Dampak & ROI yang Diharapkan</h2>
+        <p class="section-body">Berinvestasi pada pelatihan terstruktur biasanya menghasilkan payback period 3-6 bulan melalui kombinasi efisiensi, retensi, dan revenue:</p>
+        <div class="roi-grid">
+          <div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penurunan waktu onboarding karyawan baru dari 3 bulan ke 1 bulan</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Peningkatan produktivitas tim sebesar 15-20% dalam 90 hari pertama</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Standarisasi SOP dan blueprint yang siap di-rollout ke seluruh unit</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Penghematan biaya rekrutmen akibat retensi yang lebih baik</div></div><div class="roi-card"><div class="roi-mark">↗</div><div class="roi-text">Persiapan audit / sertifikasi selesai lebih cepat</div></div>
+        </div>
+        <div class="roi-proof"><strong>Bukti:</strong> Diselenggarakan untuk 30+ perusahaan manufaktur &amp; FMCG • NPS rata-rata 4,7/5 dari 200+ peserta</div>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">06</div>
+      <div class="section-content">
+        <h2 class="section-title">Jadwal Pelaksanaan</h2>
+        <p class="section-body"><strong>Tanggal:</strong> 15-17 September 2026 (3 hari)</p>
+        <p class="section-body"><strong>Lokasi:</strong> Hotel Grand Hyatt Jakarta</p>
+        <table class="proposal-table schedule-table">
+          <thead><tr><th style="width:35%">Waktu</th><th>Agenda</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hari 1</strong></td><td>Pembukaan &amp; fondasi</td></tr><tr><td><strong>Hari 2</strong></td><td>Pendalaman &amp; latihan terapan</td></tr><tr><td><strong>Hari 3</strong></td><td>Studi kasus &amp; presentasi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">07</div>
+      <div class="section-content">
+        <h2 class="section-title">Investasi</h2>
+        <table class="proposal-table pricing-table">
+          <thead><tr><th>Item</th><th style="width:40%">Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Biaya per Peserta</strong></td><td>Rp 2.500.000</td></tr>
+            <tr><td><strong>Minimal Peserta</strong></td><td>10 orang</td></tr>
+            <tr><td><strong>Catatan</strong></td><td>Termasuk makan siang, sertifikat, dan modul.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+          
+    <section class="section-block">
+      <div class="section-num">08</div>
+      <div class="section-content">
+        <h2 class="section-title">Fasilitas Peserta</h2>
+        
+          <div class="facility-grid">
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🎓</div>
+                <div class="facility-doc-label">Sertifikat kelulusan</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">📚</div>
+                <div class="facility-doc-label">Modul hardcopy &amp; softcopy</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🍽️</div>
+                <div class="facility-doc-label">Makan siang &amp; coffee break</div>
+              </div>
+            
+              <div class="facility-card-doc">
+                <div class="facility-doc-icon">🏨</div>
+                <div class="facility-doc-label">Konsultasi pascapelatihan</div>
+              </div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+          
+    <section class="section-block closing-block">
+      <div class="section-num">09</div>
+      <div class="section-content">
+        <h2 class="section-title">Penutup</h2>
+        <p class="section-body">Kami mengundang Anda untuk bergabung dalam pelatihan transformatif ini.</p>
+        <div class="closing-cta-block">
+          <div class="closing-cta-headline">Daftarkan tim Anda hari ini dan dapatkan diskon 15%.</div>
+          <div class="closing-cta-meta">
+            <div class="closing-pill"><span class="cp-label">Masa berlaku</span><span class="cp-value">13 September 2026</span></div>
+            <div class="closing-pill"><span class="cp-label">Deadline konfirmasi</span><span class="cp-value">13 September 2026</span></div>
           </div>
           
     <div class="closing-contacts">

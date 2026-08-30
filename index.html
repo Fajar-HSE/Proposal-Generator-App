@@ -179,23 +179,29 @@
         </a>
         <a href="#" class="nav-item" data-step="9">
           <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="9" x2="15" y2="9"/></svg>
+          </span>
+          <span class="nav-label">Materi Pelatihan</span>
+        </a>
+        <a href="#" class="nav-item" data-step="10">
+          <span class="nav-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </span>
           <span class="nav-label">Tanggal & Venue</span>
         </a>
-        <a href="#" class="nav-item" data-step="10">
+        <a href="#" class="nav-item" data-step="11">
           <span class="nav-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </span>
           <span class="nav-label">Biaya</span>
         </a>
-        <a href="#" class="nav-item" data-step="11">
+        <a href="#" class="nav-item" data-step="12">
           <span class="nav-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
           </span>
           <span class="nav-label">Fasilitas</span>
         </a>
-        <a href="#" class="nav-item" data-step="12">
+        <a href="#" class="nav-item" data-step="13">
           <span class="nav-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
           </span>
@@ -236,13 +242,13 @@
           </button>
           <div>
             <h2 id="stepTitle">Pilih Template Design</h2>
-            <p class="step-meta" id="stepMeta">Langkah 1 dari 11</p>
+            <p class="step-meta" id="stepMeta">Langkah 1 dari 13</p>
           </div>
         </div>
         <div class="topbar-right">
           <div class="step-progress" id="stepProgress">
             <div class="progress-bar"><span id="progressFill"></span></div>
-            <span class="progress-text" id="progressText">1/11</span>
+            <span class="progress-text" id="progressText">1/13</span>
           </div>
           <button class="btn btn-ghost" id="prevBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -324,6 +330,91 @@
                 <div>
                   <h4>Minimal</h4>
                   <p>Tipografi besar, banyak whitespace.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <!-- NEW TEMPLATES -->
+            <label class="template-card" data-template="executive">
+              <input type="radio" name="template" value="executive" />
+              <div class="template-preview preview-executive">
+                <div class="pv-header gold-strip"></div>
+                <div class="pv-line navy tall w-60"></div>
+                <div class="pv-line dark w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark w-75"></div>
+                <div class="pv-line dark w-85"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Executive</h4>
+                  <p>Navy + gold serif, untuk C-level.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="template-card" data-template="bold">
+              <input type="radio" name="template" value="bold" />
+              <div class="template-preview preview-bold">
+                <div class="pv-header orange-block"></div>
+                <div class="pv-line dark tall w-80"></div>
+                <div class="pv-line dark w-60"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark w-85"></div>
+                <div class="pv-line dark w-70"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Bold</h4>
+                  <p>Orange-hitam geometric, agresif.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="template-card" data-template="elegant">
+              <input type="radio" name="template" value="elegant" />
+              <div class="template-preview preview-elegant">
+                <div class="pv-line burgundy tall w-50"></div>
+                <div class="pv-line dark w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark w-80"></div>
+                <div class="pv-line cream-strip tall w-100"></div>
+                <div class="pv-line dark w-70"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Elegant</h4>
+                  <p>Burgundy + cream, refined.</p>
+                </div>
+                <span class="template-check">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="template-card" data-template="corporate">
+              <input type="radio" name="template" value="corporate" />
+              <div class="template-preview preview-corporate">
+                <div class="pv-header slate-strip"></div>
+                <div class="pv-line slate tall w-70"></div>
+                <div class="pv-line dark w-90"></div>
+                <div class="pv-gap"></div>
+                <div class="pv-line dark w-80"></div>
+                <div class="pv-line dark w-60"></div>
+              </div>
+              <div class="template-info">
+                <div>
+                  <h4>Corporate</h4>
+                  <p>Slate-biru konservatif.</p>
                 </div>
                 <span class="template-check">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -450,7 +541,7 @@
         <section class="step" data-step="5" style="display:none;"></section>
         <section class="step" data-step="6" style="display:none;"></section>
         <section class="step" data-step="7" style="display:none;"></section>
-        <section class="step" data-step="12" style="display:none;"></section>
+        <section class="step" data-step="13" style="display:none;"></section>
 
         <!-- ========== STEP 8: Persyaratan ========== -->
         <section class="step" data-step="8" style="display:none;">
@@ -470,6 +561,41 @@
             <div class="field-group">
               <label for="requirements">Persyaratan Peserta</label>
               <textarea id="requirements" class="textarea" placeholder="Contoh: Pendidikan minimal SMA, memiliki laptop pribadi, bersedia mengikuti seluruh sesi, dsb."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== STEP 8: Materi Pelatihan (NEW) ========== -->
+        <section class="step" data-step="8" style="display:none;">
+          <div class="step-hero">
+            <span class="step-pill">Materi</span>
+            <h1>Materi Pelatihan</h1>
+            <p>Daftar topik yang akan dibahas per sesi. Klik "Suggest by AI" untuk generate otomatis, atau tambahkan baris manual.</p>
+          </div>
+          <div class="form-card">
+            <div class="ai-toolbar">
+              <button class="btn btn-ai" id="generateMaterialsBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+                <span>Suggest Materi dengan AI</span>
+              </button>
+              <button class="btn btn-ghost" id="addMaterialRowBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Tambah Baris</span>
+              </button>
+              <span class="toolbar-hint" id="materialsCount">0 sesi</span>
+            </div>
+            <div class="materials-table">
+              <div class="materials-head">
+                <div>Sesi</div>
+                <div>Topik</div>
+                <div>Durasi</div>
+                <div>Metode</div>
+                <div></div>
+              </div>
+              <div id="materialsList"></div>
+            </div>
+            <div class="brief-helper" style="margin-top:14px">
+              <strong>💡 Tip:</strong> Lebih baik 6–10 sesi yang terfokus daripada 20 sesi dangkal. Kualitas kurikulum > kuantitas.
             </div>
           </div>
         </section>
@@ -500,8 +626,8 @@
           </div>
         </section>
 
-        <!-- ========== STEP 10: Biaya ========== -->
-        <section class="step" data-step="10" style="display:none;">
+        <!-- ========== STEP 11: Biaya ========== -->
+        <section class="step" data-step="11" style="display:none;">
           <div class="step-hero">
             <span class="step-pill">Investasi</span>
             <h1>Biaya Pelatihan</h1>
@@ -525,8 +651,8 @@
           </div>
         </section>
 
-        <!-- ========== STEP 11: Fasilitas ========== -->
-        <section class="step" data-step="11" style="display:none;">
+        <!-- ========== STEP 12: Fasilitas ========== -->
+        <section class="step" data-step="12" style="display:none;">
           <div class="step-hero">
             <span class="step-pill">Fasilitas</span>
             <h1>Fasilitas Peserta</h1>

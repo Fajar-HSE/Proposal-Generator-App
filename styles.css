@@ -1488,3 +1488,424 @@ h1, h2, h3, h4 {
 /* WhyUs / ROI numbering style (05A / 05B) — slightly smaller */
 .section-num { white-space: nowrap; }
 
+/* ============================================================
+   NEW: Materi Pelatihan (Step 8) + 4 more design templates
+   - Materials input table in step 8
+   - Materials rendering block inside the proposal (classic/modern/minimal + 4 new)
+   - Template preview cards for 4 new designs
+   - Full .tpl-executive / .tpl-bold / .tpl-elegant / .tpl-corporate styling
+   ============================================================ */
+
+/* ---------- Step 8 input UI: materials table ---------- */
+.materials-table {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.materials-head,
+.material-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 110px 130px 1.2fr 36px;
+  gap: 8px;
+  align-items: start;
+}
+.materials-head {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #475569;
+  padding: 8px 4px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.material-row {
+  padding: 8px 4px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+.material-row .textarea { min-height: 64px; }
+.material-remove {
+  align-self: center;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.material-remove:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+#materialsCount { color: #6366f1; font-weight: 600; }
+
+/* ---------- Materials rendering inside the proposal ---------- */
+.materials-table {
+  /* (table base in proposal context) */
+}
+.proposal-table.materials-table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.proposal-table.materials-table thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  background: #f1f5f9;
+  color: #475569;
+  border-bottom: 2px solid #cbd5e1;
+}
+.proposal-table.materials-table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+.material-row-tr:hover td { background: rgba(99,102,241,0.04); }
+.mat-no-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+.proposal.tpl-classic .mat-no-badge { background: #1e3a5f; }
+.proposal.tpl-minimal .mat-no-badge { background: #0f172a; }
+.proposal.tpl-executive .mat-no-badge { background: #1a2942; border: 2px solid #c9a85f; color: #c9a85f; }
+.proposal.tpl-bold .mat-no-badge { background: #f97316; }
+.proposal.tpl-elegant .mat-no-badge { background: #881337; }
+.proposal.tpl-corporate .mat-no-badge { background: #1e40af; }
+
+.mat-title-text { font-weight: 600; color: #0f172a; }
+.mat-desc { font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.5; }
+.mat-pill, .mat-method-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.mat-pill { background: #fef3c7; color: #92400e; }
+.mat-method-tag { background: #ede9fe; color: #5b21b6; }
+.proposal.tpl-classic .mat-pill { background: #f1f5f9; color: #1e3a5f; }
+.proposal.tpl-classic .mat-method-tag { background: #e0e7ff; color: #1e3a5f; }
+.proposal.tpl-minimal .mat-pill { background: transparent; border: 1px solid #cbd5e1; color: #334155; }
+.proposal.tpl-minimal .mat-method-tag { background: transparent; border: 1px solid #cbd5e1; color: #334155; }
+.proposal.tpl-bold .mat-pill { background: #fde68a; color: #7c2d12; }
+.proposal.tpl-bold .mat-method-tag { background: #fef3c7; color: #92400e; }
+
+.materials-totals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  background: linear-gradient(135deg, #fafbff 0%, #f8fafc 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+.proposal.tpl-modern .materials-totals { background: linear-gradient(135deg, #fef3c7 0%, #fdf4ff 100%); border-color: #fde68a; }
+.proposal.tpl-exec-materials { display: flex; gap: 14px; flex-wrap: wrap; }
+.materials-total-item { display: flex; flex-direction: column; gap: 4px; text-align: center; }
+.mti-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; font-weight: 700; }
+.mti-value { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #0f172a; }
+
+/* ============================================================
+   4 NEW TEMPLATE DESIGNS
+   ============================================================ */
+
+/* ---------- Template preview cards on Step 1 ---------- */
+.preview-executive { background: #1a2942; padding: 18px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.preview-executive .pv-header { width: 60%; height: 4px; background: linear-gradient(90deg, #c9a85f 0%, transparent 100%); margin-bottom: 6px; border-radius: 2px; }
+.preview-executive .pv-line.navy { background: #1a2942; }
+.preview-executive .pv-line.dark { background: rgba(201,168,95,0.6); }
+
+.preview-bold { background: #0f172a; padding: 18px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.preview-bold .pv-header { width: 90%; height: 14px; background: #f97316; margin-bottom: 6px; }
+.preview-bold .pv-line { background: #f1f5f9; }
+.preview-bold .pv-line.dark { background: #e2e8f0; }
+.preview-bold .pv-line.tall { background: #fff; height: 12px; }
+
+.preview-elegant { background: #fff8ed; padding: 18px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.preview-elegant .pv-line { background: #881337; }
+.preview-elegant .pv-line.burgundy { background: #881337; }
+.preview-elegant .pv-line.dark { background: #1f2937; }
+.preview-elegant .cream-strip { background: #fff8ed !important; height: 6px; }
+
+.preview-corporate { background: #f8fafc; padding: 18px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.preview-corporate .pv-header { width: 100%; height: 4px; background: #1e40af; margin-bottom: 6px; }
+.preview-corporate .pv-line { background: #1f2937; }
+.preview-corporate .pv-line.slate { background: #1e40af; }
+
+/* ---------- Hide template cards in picker that are now 4 more ----------
+   (preview-classic / preview-modern / preview-minimal styles already exist) */
+
+/* ============================================================
+   TEMPLATE 1: Executive (Navy + Gold serif, for C-level/board)
+   ============================================================ */
+.proposal.tpl-executive {
+  font-family: 'Playfair Display', 'Source Serif Pro', Georgia, serif;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Source Serif Pro', Georgia, serif;
+}
+.proposal.tpl-executive .cover-page { background: linear-gradient(135deg, #0b1426 0%, #1a2942 60%, #2c3e5f 100%); color: #fff8ed; }
+.proposal.tpl-executive .cover-tag { color: #c9a85f; letter-spacing: 0.4em; font-weight: 600; }
+.proposal.tpl-executive .cover-title { font-weight: 700; color: #fff8ed; border-bottom: 3px double #c9a85f; padding-bottom: 16px; }
+.proposal.tpl-executive .cover-meta-row { border-bottom-color: rgba(201,168,95,0.3); }
+.proposal.tpl-executive .cover-meta-row strong { color: #c9a85f; border-bottom-color: #c9a85f; }
+.proposal.tpl-executive .cover-competency { background: rgba(201,168,95,0.15); color: #c9a85f; border: 1px solid #c9a85f; }
+
+.proposal.tpl-executive .page-header { border-bottom-color: #c9a85f; }
+.proposal.tpl-executive .page-eyebrow { color: #c9a85f; letter-spacing: 0.3em; }
+.proposal.tpl-executive .page-title { font-family: var(--font-heading); font-weight: 700; }
+
+.proposal.tpl-executive .toc-num { color: #c9a85f; font-weight: 700; }
+.proposal.tpl-executive .toc-dots { background-image: radial-gradient(circle, #c9a85f 1px, transparent 1px); }
+
+.proposal.tpl-executive .section-num { font-family: var(--font-heading); font-style: italic; background: linear-gradient(180deg, #c9a85f 0%, #8b7038 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.proposal.tpl-executive .section-title { font-family: var(--font-heading); font-weight: 700; border-bottom-style: double; border-bottom-color: #c9a85f; border-bottom-width: 3px; }
+.proposal.tpl-executive .section-body { font-family: var(--font-body); }
+.proposal.tpl-executive .section-list .bullet { background: #c9a85f; }
+.proposal.tpl-executive .check-mark { color: #c9a85f; }
+
+.proposal.tpl-executive .proposal-table th { background: #1a2942; color: #c9a85f; }
+.proposal.tpl-executive .proposal-table tr:nth-child(even) { background: rgba(201,168,95,0.05); }
+.proposal.tpl-executive .proposal-table tr:hover { background: rgba(201,168,95,0.1); }
+
+.proposal.tpl-executive .exec-headline { border-left-color: #c9a85f; background: linear-gradient(90deg, rgba(201,168,95,0.15) 0%, transparent 100%); }
+.proposal.tpl-executive .exec-problem { background: rgba(153,27,27,0.08); }
+.proposal.tpl-executive .exec-problem .exec-card-tag { background: #991b1b; }
+.proposal.tpl-executive .exec-solution { background: rgba(201,168,95,0.08); }
+.proposal.tpl-executive .exec-solution .exec-card-tag { background: #1a2942; }
+.proposal.tpl-executive .exec-section-title { color: #c9a85f; letter-spacing: 0.2em; }
+.proposal.tpl-executive .exec-diffs li::before { color: #c9a85f; content: '◆'; }
+.proposal.tpl-executive .exec-outcomes li::before { content: '✓'; color: #c9a85f; }
+.proposal.tpl-executive .exec-bottom { background: linear-gradient(135deg, #0b1426 0%, #1a2942 100%); border-top: 3px double #c9a85f; }
+.proposal.tpl-executive .exec-investment-value { font-family: var(--font-heading); }
+
+.proposal.tpl-executive .whyus-grid { grid-template-columns: 1fr; gap: 14px; }
+.proposal.tpl-executive .whyus-card { border-left: 4px solid #c9a85f; background: rgba(201,168,95,0.04); }
+.proposal.tpl-executive .whyus-icon { font-size: 26px; }
+
+.proposal.tpl-executive .roi-card { border-left-color: #c9a85f; background: rgba(201,168,95,0.06); }
+.proposal.tpl-executive .roi-mark { color: #c9a85f; font-family: var(--font-heading); }
+
+.proposal.tpl-executive .closing-cta-block { background: linear-gradient(135deg, #0b1426 0%, #1a2942 100%); border-top: 3px double #c9a85f; font-family: var(--font-body); }
+.proposal.tpl-executive .closing-cta-headline { font-family: var(--font-heading); }
+.proposal.tpl-executive .closing-pill { background: rgba(201,168,95,0.15); border: 1px solid #c9a85f; }
+.proposal.tpl-executive .closing-contact { background: rgba(201,168,95,0.08); border-color: rgba(201,168,95,0.3); }
+.proposal.tpl-executive .cc-label { color: #c9a85f; opacity: 1; }
+.proposal.tpl-executive .closing-signoff { border-top-color: rgba(201,168,95,0.3); }
+.proposal.tpl-executive .closing-block .section-num { background: linear-gradient(180deg, #c9a85f 0%, #8b7038 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+.proposal.tpl-executive .cta-box { background: #1a2942; color: #c9a85f; font-family: var(--font-heading); }
+
+/* ============================================================
+   TEMPLATE 2: Bold (Orange-Black geometric, aggressive growth pitch)
+   ============================================================ */
+.proposal.tpl-bold {
+  font-family: 'Archivo', 'Inter', sans-serif;
+  --font-heading: 'Archivo Black', 'Archivo', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+.proposal.tpl-bold .cover-page { background: #0f172a; color: #fff; }
+.proposal.tpl-bold .cover-page::before { content: ''; position: absolute; top: 0; left: 0; width: 12px; height: 100%; background: #f97316; }
+.proposal.tpl-bold .cover-tag { color: #f97316; font-weight: 800; letter-spacing: 0.3em; }
+.proposal.tpl-bold .cover-title { font-family: var(--font-heading); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; }
+.proposal.tpl-bold .cover-sub { color: #fdba74; }
+.proposal.tpl-bold .cover-meta-row { border-bottom-color: rgba(249,115,22,0.3); }
+.proposal.tpl-bold .cover-meta-row strong { color: #f97316; border-bottom-color: #f97316; }
+.proposal.tpl-bold .cover-competency { background: #f97316; color: #0f172a; }
+
+.proposal.tpl-bold .page-header { border-bottom: 4px solid #f97316; padding-bottom: 10px; }
+.proposal.tpl-bold .page-eyebrow { color: #f97316; font-weight: 800; letter-spacing: 0.3em; }
+.proposal.tpl-bold .page-title { font-family: var(--font-heading); text-transform: uppercase; font-weight: 900; letter-spacing: -0.01em; }
+
+.proposal.tpl-bold .toc-num { color: #f97316; font-weight: 800; font-size: 14px; }
+.proposal.tpl-bold .toc-dots { background-image: linear-gradient(90deg, #f97316 0%, transparent 100%); height: 2px; }
+.proposal.tpl-bold .toc-item { padding: 6px 0; }
+
+.proposal.tpl-bold .section-num { font-family: var(--font-heading); color: #f97316; background: none; -webkit-text-fill-color: #f97316; }
+.proposal.tpl-bold .section-title { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.005em; border-bottom: 3px solid #f97316; }
+.proposal.tpl-bold .section-title::after { content: ''; display: block; width: 30px; height: 3px; background: #0f172a; margin-top: 4px; }
+.proposal.tpl-bold .section-body { font-family: var(--font-body); }
+.proposal.tpl-bold .section-list .bullet { background: #f97316; width: 10px; height: 10px; }
+.proposal.tpl-bold .check-mark { color: #f97316; font-size: 16px; font-weight: 900; }
+
+.proposal.tpl-bold .proposal-table th { background: #0f172a; color: #f97316; text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
+.proposal.tpl-bold .proposal-table tr:nth-child(even) { background: rgba(249,115,22,0.05); }
+.proposal.tpl-bold .proposal-table tr:hover { background: rgba(249,115,22,0.1); }
+
+.proposal.tpl-bold .exec-headline { border-left: 6px solid #f97316; background: linear-gradient(90deg, rgba(249,115,22,0.12) 0%, transparent 100%); font-family: var(--font-heading); }
+.proposal.tpl-bold .exec-problem { background: #0f172a; color: #fff; }
+.proposal.tpl-bold .exec-problem .exec-card-tag { background: #f97316; color: #0f172a; }
+.proposal.tpl-bold .exec-problem .exec-card-body { color: #fff; }
+.proposal.tpl-bold .exec-solution { background: #fff7ed; border: 2px solid #f97316; }
+.proposal.tpl-bold .exec-solution .exec-card-tag { background: #0f172a; color: #f97316; }
+.proposal.tpl-bold .exec-section-title { color: #f97316; font-weight: 800; letter-spacing: 0.2em; }
+.proposal.tpl-bold .exec-diffs li::before { content: '★'; color: #f97316; font-size: 16px; }
+.proposal.tpl-bold .exec-outcomes li::before { content: '►'; color: #f97316; }
+.proposal.tpl-bold .exec-bottom { background: #f97316; color: #0f172a; }
+.proposal.tpl-bold .exec-investment-label, .proposal.tpl-bold .exec-next-label { color: rgba(15,23,42,0.7); opacity: 1; }
+.proposal.tpl-bold .exec-investment-value { font-family: var(--font-heading); }
+
+.proposal.tpl-bold .whyus-card { background: #0f172a; color: #fff; border-radius: 0; border-left: 6px solid #f97316; }
+.proposal.tpl-bold .whyus-icon { background: #f97316; padding: 6px 10px; border-radius: 0; color: #0f172a; font-size: 16px; }
+.proposal.tpl-bold .whyus-text { color: #fff; }
+
+.proposal.tpl-bold .roi-card { border-left: 6px solid #f97316; background: #0f172a; color: #fff; }
+.proposal.tpl-bold .roi-mark { color: #f97316; font-family: var(--font-heading); font-size: 28px; }
+.proposal.tpl-bold .roi-text { color: #fff; }
+.proposal.tpl-bold .roi-proof { background: #f97316; color: #0f172a; }
+
+.proposal.tpl-bold .closing-cta-block { background: #0f172a; border-top: 6px solid #f97316; }
+.proposal.tpl-bold .closing-cta-headline { font-family: var(--font-heading); text-transform: uppercase; }
+.proposal.tpl-bold .closing-pill { background: #f97316; color: #0f172a; }
+.proposal.tpl-bold .closing-pill .cp-label { color: rgba(15,23,42,0.8); }
+.proposal.tpl-bold .closing-pill .cp-value { color: #0f172a; }
+.proposal.tpl-bold .closing-contact { background: rgba(249,115,22,0.1); border: 1px solid #f97316; }
+.proposal.tpl-bold .cc-label { color: #f97316; }
+.proposal.tpl-bold .closing-signoff { border-top-color: rgba(249,115,22,0.4); }
+.proposal.tpl-bold .closing-block .section-num { color: #f97316; }
+
+.proposal.tpl-bold .cta-box { background: #f97316; color: #0f172a; font-family: var(--font-heading); text-transform: uppercase; }
+
+/* ============================================================
+   TEMPLATE 3: Elegant (Burgundy + Cream, refined / boutique)
+   ============================================================ */
+.proposal.tpl-elegant {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Source Serif Pro', serif;
+}
+.proposal.tpl-elegant .cover-page { background: linear-gradient(135deg, #fff8ed 0%, #fef3c7 100%); color: #1f2937; position: relative; }
+.proposal.tpl-elegant .cover-page::before { content: ''; position: absolute; top: 16px; left: 16px; right: 16px; bottom: 16px; border: 1px solid #881337; pointer-events: none; }
+.proposal.tpl-elegant .cover-tag { color: #881337; letter-spacing: 0.4em; font-weight: 600; }
+.proposal.tpl-elegant .cover-title { color: #1f2937; font-style: italic; font-weight: 600; }
+.proposal.tpl-elegant .cover-title::first-letter { font-size: 110%; color: #881337; }
+.proposal.tpl-elegant .cover-sub { color: #6b7280; font-style: italic; }
+.proposal.tpl-elegant .cover-meta-row { border-bottom-color: rgba(136,19,55,0.2); }
+.proposal.tpl-elegant .cover-meta-row span { color: #881337; letter-spacing: 0.12em; }
+.proposal.tpl-elegant .cover-meta-row strong { color: #1f2937; border-bottom-color: #c9a85f; font-weight: 500; }
+.proposal.tpl-elegant .cover-competency { background: #fff; color: #881337; border: 1px solid #881337; font-style: italic; }
+
+.proposal.tpl-elegant .page-header { border-bottom: 1px solid #c9a85f; }
+.proposal.tpl-elegant .page-eyebrow { color: #881337; letter-spacing: 0.3em; font-style: italic; }
+.proposal.tpl-elegant .page-title { font-family: var(--font-heading); font-style: italic; font-weight: 600; }
+
+.proposal.tpl-elegant .toc-num { color: #881337; font-family: var(--font-heading); font-size: 18px; }
+.proposal.tpl-elegant .toc-dots { background-image: linear-gradient(90deg, #c9a85f 0%, transparent 100%); height: 1px; }
+.proposal.tpl-elegant .toc-item { border-bottom: 1px solid rgba(136,19,55,0.1); padding: 6px 0; }
+
+.proposal.tpl-elegant .section-num { font-family: var(--font-heading); color: #881337; background: none; -webkit-text-fill-color: #881337; font-style: italic; }
+.proposal.tpl-elegant .section-title { font-family: var(--font-heading); font-style: italic; font-weight: 600; border-bottom-style: dotted; border-bottom-color: #c9a85f; }
+.proposal.tpl-elegant .section-body { color: #374151; }
+.proposal.tpl-elegant .section-list .bullet { background: #c9a85f; width: 8px; height: 8px; border-radius: 50%; }
+.proposal.tpl-elegant .check-mark { color: #881337; }
+
+.proposal.tpl-elegant .proposal-table th { background: #fff8ed; color: #881337; border-bottom: 2px solid #881337; }
+.proposal.tpl-elegant .proposal-table tr:nth-child(even) { background: rgba(136,19,55,0.04); }
+.proposal.tpl-elegant .proposal-table tr:hover { background: rgba(136,19,55,0.08); }
+
+.proposal.tpl-elegant .exec-headline { border-left: 3px double #881337; background: linear-gradient(90deg, #fff8ed 0%, transparent 100%); font-family: var(--font-heading); font-style: italic; }
+.proposal.tpl-elegant .exec-problem { background: rgba(127,29,29,0.06); }
+.proposal.tpl-elegant .exec-problem .exec-card-tag { background: #7f1d1d; }
+.proposal.tpl-elegant .exec-solution { background: rgba(136,19,55,0.06); }
+.proposal.tpl-elegant .exec-solution .exec-card-tag { background: #881337; }
+.proposal.tpl-elegant .exec-section-title { color: #881337; letter-spacing: 0.2em; font-family: var(--font-heading); font-style: italic; }
+.proposal.tpl-elegant .exec-diffs li::before { color: #c9a85f; content: '◆'; }
+.proposal.tpl-elegant .exec-outcomes li::before { color: #881337; content: '✦'; }
+.proposal.tpl-elegant .exec-bottom { background: #881337; color: #fff8ed; }
+.proposal.tpl-elegant .exec-investment-value { font-family: var(--font-heading); font-style: italic; }
+
+.proposal.tpl-elegant .whyus-card { background: #fff8ed; border: 1px solid #c9a85f; border-radius: 0; }
+.proposal.tpl-elegant .whyus-icon { color: #881337; font-size: 24px; }
+
+.proposal.tpl-elegant .roi-card { border-left: 3px double #881337; background: linear-gradient(90deg, rgba(136,19,55,0.06) 0%, transparent 100%); border-radius: 0; }
+.proposal.tpl-elegant .roi-mark { color: #881337; font-family: var(--font-heading); font-style: italic; }
+.proposal.tpl-elegant .roi-proof { background: #fff8ed; border: 1px solid #c9a85f; color: #6b7280; font-style: italic; }
+
+.proposal.tpl-elegant .closing-cta-block { background: linear-gradient(135deg, #881337 0%, #5b1437 100%); border-top: 3px double #c9a85f; }
+.proposal.tpl-elegant .closing-cta-headline { font-family: var(--font-heading); font-style: italic; }
+.proposal.tpl-elegant .closing-pill { background: rgba(255,248,237,0.15); border: 1px solid #c9a85f; }
+.proposal.tpl-elegant .closing-contact { background: rgba(255,248,237,0.08); border: 1px solid rgba(201,168,95,0.4); }
+.proposal.tpl-elegant .cc-label { color: #c9a85f; }
+.proposal.tpl-elegant .closing-signoff { border-top-color: rgba(201,168,95,0.5); }
+.proposal.tpl-elegant .closing-block .section-num { color: #881337; }
+
+.proposal.tpl-elegant .cta-box { background: transparent; color: #881337; border: 1px solid #881337; font-family: var(--font-heading); font-style: italic; }
+
+/* ============================================================
+   TEMPLATE 4: Corporate (Slate-blue, conservative / enterprise)
+   ============================================================ */
+.proposal.tpl-corporate {
+  font-family: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+.proposal.tpl-corporate { background: #fafbfc; }
+.proposal.tpl-corporate .cover-page { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e40af 100%); color: #fff; }
+.proposal.tpl-corporate .cover-tag { color: #93c5fd; letter-spacing: 0.25em; }
+.proposal.tpl-corporate .cover-title { color: #fff; font-weight: 700; }
+.proposal.tpl-corporate .cover-title::after { content: ''; display: block; width: 100px; height: 4px; background: #1e40af; margin-top: 14px; }
+.proposal.tpl-corporate .cover-sub { color: #cbd5e1; }
+.proposal.tpl-corporate .cover-meta-row { border-bottom-color: rgba(147,197,253,0.2); }
+.proposal.tpl-corporate .cover-meta-row strong { color: #93c5fd; border-bottom-color: #1e40af; }
+.proposal.tpl-corporate .cover-competency { background: rgba(30,64,175,0.3); color: #fff; border: 1px solid #93c5fd; }
+
+.proposal.tpl-corporate .page-header { border-bottom: 3px solid #1e40af; }
+.proposal.tpl-corporate .page-eyebrow { color: #1e40af; letter-spacing: 0.2em; font-weight: 700; }
+.proposal.tpl-corporate .page-title { font-family: var(--font-heading); font-weight: 700; color: #0f172a; }
+
+.proposal.tpl-corporate .toc-num { color: #1e40af; font-weight: 700; }
+.proposal.tpl-corporate .toc-dots { background-image: linear-gradient(90deg, #cbd5e1 0%, transparent 100%); }
+.proposal.tpl-corporate .toc-item { padding: 6px 0; }
+
+.proposal.tpl-corporate .section-num { color: #1e40af; background: none; -webkit-text-fill-color: #1e40af; font-weight: 800; }
+.proposal.tpl-corporate .section-title { font-family: var(--font-heading); font-weight: 700; color: #0f172a; border-bottom: 2px solid #1e40af; }
+.proposal.tpl-corporate .section-body { color: #1f2937; }
+.proposal.tpl-corporate .section-list .bullet { background: #1e40af; }
+.proposal.tpl-corporate .check-mark { color: #1e40af; }
+
+.proposal.tpl-corporate .proposal-table th { background: #1e40af; color: #fff; }
+.proposal.tpl-corporate .proposal-table tr:nth-child(even) { background: rgba(30,64,175,0.04); }
+.proposal.tpl-corporate .proposal-table tr:hover { background: rgba(30,64,175,0.08); }
+
+.proposal.tpl-corporate .exec-headline { border-left: 4px solid #1e40af; background: rgba(30,64,175,0.05); }
+.proposal.tpl-corporate .exec-problem { background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); }
+.proposal.tpl-corporate .exec-problem .exec-card-tag { background: #dc2626; }
+.proposal.tpl-corporate .exec-solution { background: rgba(30,64,175,0.06); border: 1px solid rgba(30,64,175,0.2); }
+.proposal.tpl-corporate .exec-solution .exec-card-tag { background: #1e40af; }
+.proposal.tpl-corporate .exec-section-title { color: #1e40af; letter-spacing: 0.15em; font-weight: 700; }
+.proposal.tpl-corporate .exec-diffs li::before { color: #1e40af; content: '●'; }
+.proposal.tpl-corporate .exec-outcomes li::before { content: '▸'; color: #1e40af; }
+.proposal.tpl-corporate .exec-bottom { background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); }
+.proposal.tpl-corporate .exec-investment-value { font-family: var(--font-heading); }
+
+.proposal.tpl-corporate .whyus-card { background: #fff; border: 1px solid #cbd5e1; border-left: 4px solid #1e40af; }
+.proposal.tpl-corporate .whyus-icon { color: #1e40af; }
+
+.proposal.tpl-corporate .roi-card { border-left: 4px solid #1e40af; background: #fff; }
+.proposal.tpl-corporate .roi-mark { color: #1e40af; font-family: var(--font-heading); }
+.proposal.tpl-corporate .roi-proof { background: #f1f5f9; border-left: 3px solid #1e40af; }
+
+.proposal.tpl-corporate .closing-cta-block { background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); }
+.proposal.tpl-corporate .closing-cta-headline { font-family: var(--font-heading); font-weight: 700; }
+.proposal.tpl-corporate .closing-pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(147,197,253,0.4); }
+.proposal.tpl-corporate .closing-pill .cp-label { color: #93c5fd; }
+.proposal.tpl-corporate .closing-contact { background: rgba(255,255,255,0.08); border: 1px solid rgba(147,197,253,0.3); }
+.proposal.tpl-corporate .cc-label { color: #93c5fd; }
+.proposal.tpl-corporate .closing-signoff { border-top-color: rgba(147,197,253,0.4); }
+.proposal.tpl-corporate .closing-block .section-num { color: #1e40af; }
+
+.proposal.tpl-corporate .cta-box { background: #1e40af; color: #fff; font-family: var(--font-heading); font-weight: 700; }
+
+/* Corporate preserves the existing info cards but with mild treatment */
+.proposal.tpl-corporate .info-card { background: #fff; border: 1px solid #cbd5e1; border-top: 3px solid #1e40af; }
+
