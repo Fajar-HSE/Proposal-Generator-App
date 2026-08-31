@@ -2039,6 +2039,7 @@ function buildScheduleDays(startDate, endDate) {
 function buildMaterialsSectionHTML(data) {
   const mats = Array.isArray(data.materials) ? data.materials : [];
   if (mats.length === 0) return '';
+  const units = Array.isArray(data.competencyUnits) ? data.competencyUnits : [];
   const rows = mats.map((m, i) => `
     <tr class="material-row-tr">
       <td class="mat-no"><div class="mat-no-badge">${i + 1}</div></td>
@@ -2065,6 +2066,7 @@ function buildMaterialsSectionHTML(data) {
         </table>
         <div class="materials-totals">
           <div class="materials-total-item"><span class="mti-label">Total Materi</span><span class="mti-value">${mats.length}</span></div>
+          ${units.length ? `<div class="materials-total-item"><span class="mti-label">Unit Kompetensi</span><span class="mti-value">${units.length}</span></div>` : ''}
         </div>
       </div>
     </section>
