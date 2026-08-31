@@ -8,11 +8,21 @@ const DEFAULT_STATE: ProposalState = {
   template: 'modern',
   companyName: '',
   organizerName: '',
+  organizerLogo: '',
   proposalTitle: '',
   competencyUnit: '',
+  competencyUnits: [],
   cta: '',
   startDate: '',
   endDate: '',
+  trainingStartDate: '',
+  trainingEndDate: '',
+  trainingStartTime: '',
+  trainingEndTime: '',
+  examStartDate: '',
+  examEndDate: '',
+  examStartTime: '',
+  examEndTime: '',
   venue: '',
   pricePerPerson: '',
   minParticipants: '',
@@ -31,6 +41,7 @@ const DEFAULT_STATE: ProposalState = {
   description: '',
   objectives: '',
   audience: '',
+  audienceCount: '',
   requirements: '',
   closing: '',
   materials: [],
@@ -39,7 +50,18 @@ const DEFAULT_STATE: ProposalState = {
 
 export const proposalStore = {
   get(): ProposalState {
-    return { ...DEFAULT_STATE, ...storage.get<Partial<ProposalState>>('proposal', {}) };
+    const raw = storage.get<Partial<ProposalState>>('proposal', {}) as Partial<ProposalState>;
+    const merged: ProposalState = { ...DEFAULT_STATE, ...raw } as ProposalState;
+    // Backward compat: single competencyUnit -> array
+    if ((!merged.competencyUnits || merged.competencyUnits.length === 0) && merged.competencyUnit) {
+      merged.competencyUnits = [merged.competencyUnit];
+    }
+    // Ensure array
+    if (!Array.isArray(merged.competencyUnits)) merged.competencyUnits = [];
+    // Backward compat jadwal
+    if (!merged.trainingStartDate && merged.startDate) merged.trainingStartDate = merged.startDate;
+    if (!merged.trainingEndDate && merged.endDate) merged.trainingEndDate = merged.endDate;
+    return merged;
   },
 
   set(state: Partial<ProposalState>): void {

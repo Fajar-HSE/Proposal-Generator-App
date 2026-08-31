@@ -33,21 +33,34 @@ export interface ProposalState {
   template: TemplateId;
   companyName: string;
   organizerName: string;
+  organizerLogo: string; // base64 data URL
   proposalTitle: string;
-  competencyUnit: string;
+  competencyUnit: string; // legacy single, keep for backward compat
+  competencyUnits: string[]; // NEW: multi-unit kompetensi (Tab Materi)
   cta: string;
+  // Jadwal Pelatihan
   startDate: string;
   endDate: string;
+  trainingStartDate: string;
+  trainingEndDate: string;
+  trainingStartTime: string;
+  trainingEndTime: string;
+  // Jadwal Uji Kompetensi
+  examStartDate: string;
+  examEndDate: string;
+  examStartTime: string;
+  examEndTime: string;
   venue: string;
   pricePerPerson: string;
-  minParticipants: string;
+  minParticipants: string; // jumlah peserta (now in Peserta merged tab)
   priceNotes: string;
   facilities: string[];
   clientBrief: ClientBrief;
   background: string;
   description: string;
   objectives: string;
-  audience: string;
+  audience: string; // profil peserta (merged)
+  audienceCount: string; // jumlah peserta explicit
   requirements: string;
   closing: string;
   materials: Material[];

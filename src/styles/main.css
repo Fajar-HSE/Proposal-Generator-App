@@ -1596,7 +1596,7 @@ h1, h2, h3, h4 {
 .materials-head,
 .material-row {
   display: grid;
-  grid-template-columns: 50px 1fr 110px 130px 1.2fr 36px;
+  grid-template-columns: 1fr 1.4fr 36px;
   gap: 8px;
   align-items: start;
 }
@@ -2265,3 +2265,17 @@ h1, h2, h3, h4 {
   .modal-card { padding: 22px; }
 }
 
+
+/* ===== New UI: Logo upload, competency list, jadwal split, fasilitas expanded ===== */
+.logo-upload{display:flex;flex-direction:column;gap:10px}
+.logo-preview-wrap{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px}
+.logo-preview-wrap img{max-height:72px;max-width:200px;object-fit:contain;background:white;padding:6px;border-radius:8px}
+.competency-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.competency-row{display:flex;gap:8px;align-items:center}
+.competency-row .input{flex:1}
+.competency-remove{width:32px;height:32px}
+.competency-actions{display:flex;gap:12px;align-items:center;margin-top:8px}
+#generateProgress .progress-bar{height:8px;background:var(--surface-3);border-radius:100px;overflow:hidden}
+#generateProgressFill{display:block;height:100%;background:var(--gradient-primary);width:0%;transition:width .4s ease}
+.cover-logo{margin-bottom:12px}
+.cover-logo img{max-height:64px;max-width:220px;object-fit:contain;background:white;padding:8px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.15)}

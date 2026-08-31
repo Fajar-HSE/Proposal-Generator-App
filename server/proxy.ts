@@ -11,6 +11,8 @@ const ALLOWED_TARGETS = [
   'https://openrouter.ai',
   'https://api.groq.com',
   'https://api.anthropic.com',
+  'https://api.b.ai',
+  'https://b.ai',
 ];
 
 function isAllowed(url: string): boolean {

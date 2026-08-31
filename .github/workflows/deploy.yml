@@ -24,6 +24,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: touch dist/.nojekyll && cp dist/index.html dist/404.html
+        # Fallback: sync ke docs/ untuk yang masih pakai Pages source = branch main /docs
+      - run: mkdir -p docs && cp -r dist/* docs/ && touch docs/.nojekyll || true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

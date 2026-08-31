@@ -1,12 +1,15 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/Proposal-Generator-App/' : '/',
+export default defineConfig(({ mode }) => ({
+  // Fix #1: Gunakan mode Vite (bukan process.env.NODE_ENV) agar GH Pages subpath selalu benar.
+  // mode==='production' saat `vite build` (termasuk di GitHub Actions) -> base /Proposal-Generator-App/
+  // mode==='development' saat `vite dev` -> base / agar localhost ok
+  base: mode === 'production' ? '/Proposal-Generator-App/' : '/',
   server: {
     headers: {
       // CSP applied also via meta; header is stronger when served via Vite preview/proxy
       'Content-Security-Policy':
-        "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://proposal-generator-c6bc8.firebaseapp.com https://proposal-generator-c6bc8.firebasestorage.app https://*.googleapis.com https://*.openai.com https://*.openrouter.ai https://*.groq.com https://*.anthropic.com http://localhost:* https://localhost:*; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'",
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://proposal-generator-c6bc8.firebaseapp.com https://proposal-generator-c6bc8.firebasestorage.app https://*.googleapis.com https://*.openai.com https://*.openrouter.ai https://*.groq.com https://*.anthropic.com https://api.b.ai https://*.b.ai http://localhost:* https://localhost:*; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'",
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -23,7 +26,7 @@ export default defineConfig({
   preview: {
     headers: {
       'Content-Security-Policy':
-        "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.openai.com https://*.openrouter.ai; object-src 'none'",
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.openai.com https://*.openrouter.ai https://api.b.ai https://*.b.ai; object-src 'none'",
     },
   },
   build: {
@@ -38,4 +41,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
